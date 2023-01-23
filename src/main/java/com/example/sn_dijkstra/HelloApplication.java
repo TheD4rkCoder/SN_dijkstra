@@ -21,7 +21,7 @@ public class HelloApplication extends Application {
     public void loadAndShowPicture(Stage stage) {
         FileInputStream inputstream = null;
         try {
-            inputstream = new FileInputStream("image.jpg");
+            inputstream = new FileInputStream("image.jpg"); // use other file names
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
