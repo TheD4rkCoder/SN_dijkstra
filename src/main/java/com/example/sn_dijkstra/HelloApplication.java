@@ -16,10 +16,10 @@ public class HelloApplication extends Application {
 
 
     // http://www.cse.uaa.alaska.edu/~afkjm/csce201/handouts/LoopsImages.pdf
-    static PixelReader pixelReader;
-    static PixelWriter pixelWriter;
-    static WritableImage wImage;
-    static Image image;
+    static PixelReader pixelReader; // firs originalbild
+    static PixelWriter pixelWriter; // firs Resultatbild
+    static WritableImage wImage; // Resutatbild
+    static Image image; // originalbild
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -27,6 +27,8 @@ public class HelloApplication extends Application {
         showImage(stage);
 
     }
+
+
 
     public void loadImage() {
         FileInputStream inputstream = null;
