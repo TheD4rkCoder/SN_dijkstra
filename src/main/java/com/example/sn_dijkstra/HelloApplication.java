@@ -6,11 +6,17 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+
+import javafx.embed.swing.SwingFXUtils;
+
+import javax.imageio.ImageIO;
 
 public class HelloApplication extends Application {
 
@@ -24,6 +30,14 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         loadImage();
+        PixelWriter pw = wImage.getPixelWriter();
+        for (int i = 0; i < 1900; i++) {
+            for (int j = 0; j < 1900; j++) {
+                pw.setColor(i,j,Color.DARKBLUE);
+            }
+        }
+
+        saveImage(wImage);
         showImage(stage);
 
     }
@@ -53,6 +67,15 @@ public class HelloApplication extends Application {
         stage.setTitle("Hello!");
         stage.setScene(scene);
         stage.show();
+    }
+
+    static public void saveImage(WritableImage image){
+        File file = new File("image.png");
+        try{
+            ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {
