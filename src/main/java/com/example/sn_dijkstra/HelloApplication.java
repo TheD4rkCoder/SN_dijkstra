@@ -30,16 +30,16 @@ public class HelloApplication extends Application {
 
 
 
-    public void loadImage() {
+    static public void loadImage() {
         FileInputStream inputstream = null;
         try {
-            inputstream = new FileInputStream("src/main/resources/com/example/sn_dijkstra/data/IMG_1.jpg"); // use other file names
+            inputstream = new FileInputStream("src/main/resources/com/example/sn_dijkstra/data/test1.jpg"); // use other file names
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
         image = new Image(inputstream);
         pixelReader = image.getPixelReader();
-        wImage = new WritableImage((int)image.getWidth(),(int)image.getHeight());
+        wImage = Bildeditor.convertToPolarCoordinates(image);
         PixelWriter pixelWriter = wImage.getPixelWriter();
 
     }
