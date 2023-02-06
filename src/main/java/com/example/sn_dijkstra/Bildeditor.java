@@ -24,9 +24,8 @@ public class Bildeditor {
                 int polarX = (int) (r * Math.cos(theta) + width / 2);
                 int polarY = (int) (r * Math.sin(theta) + height / 2);
                 if (polarX >= 0 && polarX < width && polarY >= 0 && polarY < height) {
-                    writer.setColor(x, y, reader.getColor(polarX, polarY));
+                    writer.setColor(x, y, reader.getColor(polarX, polarY).invert());
                     // just for beauty:
-                    writer.setColor(width-x-1, height-y-1, reader.getColor(polarX, polarY));
                 }
             }
         }

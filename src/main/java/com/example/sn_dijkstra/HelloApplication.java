@@ -30,12 +30,15 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         loadImage();
+        /*
         PixelWriter pw = wImage.getPixelWriter();
         for (int i = 0; i < 1900; i++) {
             for (int j = 0; j < 1900; j++) {
                 pw.setColor(i,j,Color.DARKBLUE);
             }
         }
+
+         */
 
         saveImage(wImage);
         showImage(stage);
@@ -47,7 +50,7 @@ public class HelloApplication extends Application {
     static public void loadImage() {
         FileInputStream inputstream = null;
         try {
-            inputstream = new FileInputStream("src/main/resources/com/example/sn_dijkstra/data/test1.jpg"); // use other file names
+            inputstream = new FileInputStream("src/main/resources/com/example/sn_dijkstra/data/IMG_1.jpg"); // use other file names
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
