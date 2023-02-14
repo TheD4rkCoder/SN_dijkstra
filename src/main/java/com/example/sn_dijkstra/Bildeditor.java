@@ -68,5 +68,28 @@ public class Bildeditor {
         }
         return polarImage;
     }
+    public static WritableImage applyGradiant(Image image) {
+        int[][] temp = new int[9][9];
+        int sum = 0;
+        for (int i = 0; i < temp.length; i++) {
+            for (int j = 0; j < temp[0].length; j++) {
+
+            }
+        }
+        int width = (int) image.getWidth();
+        int height = (int) image.getHeight();
+        WritableImage newImage = new WritableImage(width, height);
+        PixelReader reader = image.getPixelReader();
+        PixelWriter writer = newImage.getPixelWriter();
+        int posXDiff = (int) (temp.length/2) + 1;
+        int posYDiff = (int) (temp[0].length/2) + 1;
+        for (int i = 0; i < width-temp.length; i++) {
+            for (int j = 0; j < width-temp[0].length; j++) {
+            }
+        }
+
+
+        return newImage;
+    }
 
 }
