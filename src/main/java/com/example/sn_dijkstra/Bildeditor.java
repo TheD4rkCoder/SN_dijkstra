@@ -9,6 +9,8 @@ import static java.lang.Math.PI;
 import static java.lang.Math.sin;
 
 public class Bildeditor {
+
+
     public static WritableImage convertToPolarCoordinates(Image image) {
         int width = (int) image.getWidth();
         int height = (int) image.getHeight();
@@ -31,4 +33,5 @@ public class Bildeditor {
         }
         return polarImage;
     }
+
 }
