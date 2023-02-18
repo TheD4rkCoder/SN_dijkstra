@@ -29,7 +29,9 @@ public class HelloApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+
         loadImage();
+
         /*
         PixelWriter pw = wImage.getPixelWriter();
         for (int i = 0; i < 1900; i++) {
@@ -80,6 +82,7 @@ public class HelloApplication extends Application {
             e.printStackTrace();
         }
     }
+
 
     public static void main(String[] args) {
         launch();
