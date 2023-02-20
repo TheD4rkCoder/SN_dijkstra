@@ -1,32 +1,72 @@
 package com.example.sn_dijkstra;
 
-import org.w3c.dom.Node;
 
-import java.util.ArrayList;
 import java.util.PriorityQueue;
 
 public class Djikstra {
-    //ArrayList<Node>
+    private Boolean [][] shortestP;
+    private int [][]distances;
+    private Node [][]parents;
 
-    public void shortestPath(){
+    public Boolean[][] getShortestP() {
+        return shortestP;
+    }
+
+    public int[][] getDistances() {
+        return distances;
+    }
+
+    public Node[][] getParents() {
+        return parents;
+    }
+
+    public void getShortestPathTo(int x, int y){
+        int nowX = x;
+        int nowY = y;
+        while(nowX != 0 && nowY != 0){
+            shortestP[nowX][nowY] = true;
+            //Parent holen
+            nowX = parents[nowX][nowY].getX();
+            nowY = parents[nowX][nowY].getY();
+        }
+    }
+
+    public void startDjikstra(ImageGraph graph){
+        Node[][] nodes = graph.nodes;
+
+        int nodeAmount = graph.getWidth() * graph.getHeight() + 2;  // +2 wegen ein Knoten zu Beginn und einen am Ende
         PriorityQueue<Node> queue = new PriorityQueue<>();
 
-        /*
-        int []distances = new int[Anzahl nodes 1];
-        Parent []parents = new int[Anzahl nodes 1];
+        distances = new int[graph.getHeight()][graph.getWidth()];
+        parents = new Node[graph.getHeight()][graph.getWidth()];
 
-        //distances[v[0]] = 0;
-        //queue.add(v[1],0);
+        distances[0][0] = 0;
+        parents[0][0] = null;
+        queue.add(nodes[0][0]);
 
-        for (int i = 1; i < Anzahl nodes 1; i++) {
-            distances[v[i]] = infinity
-            parents[v[i]] = null;
+        for (int i = 1; i < graph.getWidth(); i++) {
+            for (int j = 0; j < graph.getHeight(); j++) {
+                distances[i][j] = Integer.MAX_VALUE;
+                parents[i][j] = null;
+            }
         }
+
+
         while(!queue.isEmpty()){
-
+            Node u = queue.poll();      //gibt das kleinste Element aus der Queue und loescht es von dort
+            for (Node neighbor : u.getNeighbors()) {
+                int dist = distances[u.getX()][u.getY()] + neighbor.getCost();
+                if(queue.contains(neighbor) && distances[neighbor.getX()][neighbor.getY()] > dist){
+                    distances[neighbor.getX()][neighbor.getY()] = dist;
+                    parents[neighbor.getX()][neighbor.getY()] = u;
+                } else if (parents[neighbor.getX()][neighbor.getY()] == null) {
+                    distances[neighbor.getX()][neighbor.getY()] = dist;
+                    parents[neighbor.getX()][neighbor.getY()] = u;
+                    queue.add(neighbor);
+                }
+            }
         }
-
-        */
-
     }
+
+
 }
