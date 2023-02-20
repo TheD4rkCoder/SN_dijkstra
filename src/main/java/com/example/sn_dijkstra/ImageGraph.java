@@ -38,12 +38,12 @@ public class ImageGraph {
         nodes = new Node[width + 2][height];    //width + 2 wegen Anfangs und Endknoten
 
         nodes[0][0] = new Node(0,0,0);      //Startknoten einfuegen
-        nodes[width + 1][0] = new Node(width + 1,0,Integer.MAX_VALUE);      //Endknoten einfuegen
+        nodes[width + 1][0] = new Node(width + 1,0,255);      //Endknoten einfuegen
 
         // create a Node for each pixel
-        for (int i = 1; i < width - 1; i++) {
+        for (int i = 1; i < width + 1; i++) {
             for (int j = 0; j < height; j++) {
-                nodes[i][j] = new Node(i, j, (int)(255 *reader.getColor(i, j).getBrightness()));
+                nodes[i][j] = new Node(i, j, (int)(255 *reader.getColor(i-1, j).getBrightness()));
             }
         }
 

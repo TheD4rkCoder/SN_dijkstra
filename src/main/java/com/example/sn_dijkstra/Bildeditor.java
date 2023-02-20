@@ -82,11 +82,12 @@ public class Bildeditor {
     public static WritableImage convertToPolarCoordinates(Image image) {
         int width = (int) image.getWidth();
         int height = (int) image.getHeight();
-        WritableImage polarImage = new WritableImage(width, height);
+        int heightToCut = (height > width) ? width/2 : height/2;
+        WritableImage polarImage = new WritableImage(width, heightToCut);
         PixelReader reader = image.getPixelReader();
         PixelWriter writer = polarImage.getPixelWriter();
 
-        for (int y = 0; y < height; y++) {
+        for (int y = 0; y < heightToCut; y++) {
             for (int x = 0; x < width; x++) {
 
                 double theta = 2 * PI * x / width;
@@ -147,7 +148,7 @@ public class Bildeditor {
         return newImage;
     }
 
-    public static WritableImage applyGradiant(Image image, double[][] filter) {
+    public static WritableImage applyFilter(Image image, double[][] filter) {
         double sum = getFilterSum(filter);
         int width = (int) image.getWidth();
         int height = (int) image.getHeight();

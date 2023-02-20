@@ -42,12 +42,14 @@ public class HelloApplication extends Application {
 
          */
         double[][] filter = Bildeditor.generateGaussianFilter(21, 18);
+        wImage = Bildeditor.applyFilter(wImage, filter);
+        wImage = Bildeditor.applyFilter(wImage, Bildeditor.gradientFilter);
         //wImage = Bildeditor.applyGradiant(wImage, filter);
-        //wImage = Bildeditor.applyGradiant(wImage, Bildeditor.gradientFilter);
-        //wImage = Bildeditor.applyGradiant(wImage, filter);
-        //wImage = Bildeditor.invertColor(wImage);
+        wImage = Bildeditor.invertColor(wImage);
         wImage = Bildeditor.reduceResolution(wImage, 25);
-        saveImage(wImage);
+        ImageGraph imageGraph = new ImageGraph(wImage);
+        //wImage = imageGraph.drawGraphImage(wImage);
+        //saveImage(wImage);
         //wImage = Bildeditor.applyGradiant(wImage, Bildeditor.gradientFilterV);
         showImage(stage);
 
