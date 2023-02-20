@@ -51,7 +51,6 @@ public class Djikstra {
             }
         }
 
-
         while(!queue.isEmpty()){
             Node u = queue.poll();      //gibt das kleinste Element aus der Queue und loescht es von dort
             for (Node neighbor : u.getNeighbors()) {

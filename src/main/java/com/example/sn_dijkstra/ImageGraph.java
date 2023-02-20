@@ -52,17 +52,12 @@ public class ImageGraph {
             // connect adjacent nodes with weighted edges
             for (int i = 1; i < width; i++) {
                 for (int j = 0; j < height; j++) {
-                    if (i > 1) {
-                        nodes[i][j].addNeighbor(nodes[i - 1][j]);
-                    }
-                    if (j > 0) {
-                        nodes[i][j].addNeighbor(nodes[i][j - 1]);
-                    }
-                    if (i < width) {
-                        nodes[i][j].addNeighbor(nodes[i + 1][j]);
-                    }
-                    if (j < height - 1) {
-                        nodes[i][j].addNeighbor(nodes[i][j + 1]);
+                    for (int k = i + 1; k < i + 6; k++) {
+                        for (int l = j - 2; l < j + 2; j++) {
+                            if (k < width && l >= 0 && l < height) {
+                                nodes[i][j].addNeighbor(nodes[k][l]);
+                            }
+                        }
                     }
                 }
             }
