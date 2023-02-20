@@ -127,20 +127,20 @@ public class Bildeditor {
         PixelReader reader = image.getPixelReader();
         PixelWriter writer = newImage.getPixelWriter();
         double averageColor;
-        double divisor;
+        int divisor;
         for (int i = 0; i < newWidth; i++) {
             for (int j = 0; j < newHeight; j++) {
                 averageColor = 0.0;
                 divisor = 0;
-                for (int k = i; k < pixelsToMerge; k++) {
-                    for (int l = j; l < pixelsToMerge; l++) {
+                for (int k = 0; k < pixelsToMerge; k++) {
+                    for (int l = 0; l < pixelsToMerge; l++) {
                         if (i * pixelsToMerge + k < width && j * pixelsToMerge + l < height) {
                             averageColor += reader.getColor(i * pixelsToMerge + k, j * pixelsToMerge + l).getBrightness();
                             divisor++;
                         }
                     }
                 }
-                averageColor = averageColor * 255 / divisor;
+                averageColor = averageColor * 255.0 / divisor;
                 writer.setColor(i, j, Color.rgb((int) averageColor, (int) averageColor, (int) averageColor));
             }
         }

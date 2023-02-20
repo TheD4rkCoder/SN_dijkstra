@@ -46,7 +46,7 @@ public class HelloApplication extends Application {
         //wImage = Bildeditor.applyGradiant(wImage, Bildeditor.gradientFilter);
         //wImage = Bildeditor.applyGradiant(wImage, filter);
         //wImage = Bildeditor.invertColor(wImage);
-        wImage = Bildeditor.reduceResolution(wImage, 5);
+        wImage = Bildeditor.reduceResolution(wImage, 31);
         saveImage(wImage);
         //wImage = Bildeditor.applyGradiant(wImage, Bildeditor.gradientFilterV);
         showImage(stage);
