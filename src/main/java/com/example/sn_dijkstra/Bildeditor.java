@@ -4,15 +4,14 @@ import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
+import javafx.scene.paint.Color;
 
-import static java.lang.Math.PI;
-import static java.lang.Math.sin;
-
+import static java.lang.Math.*;
 
 
 public class Bildeditor {
 
-    static int[][] filter = {
+    static double[][] filter = {
             {0, -1, -2, -6, -9, -6, -2, -1, 0},
             {-1, -6, -10, -13, -21, -13, -10, -6, 1},
             {-2, -10, -15, -16, -7, -16, -15, 10, 2},
@@ -35,12 +34,46 @@ public class Bildeditor {
             {1, 6, 10, 13, 21, 13, 10, 6, 1},
             {0, 1, 2, 6, 9, 6, 2, 1, 0},
     };
+    static double[][] gradientFilter = {{-1, -2, -5, -2, -1, 0, 1, 2, 5, 2, 1}};
+    static double[][] gradientFilterV = {{-1}, {-2}, {-1}, {0}, {1}, {2}, {1}};
 
-    public static int getFilterSum(int [][]filter){
-        int sum = 0;
+
+    public static double[][] generateGaussianFilter(int size, double sigma) {
+        double[][] filter = new double[size][size];
+        //double sum = 0.0;
+
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                int x = i - size / 2;
+                int y = j - size / 2;
+                double exponent = -(x * x + y * y) / (2 * sigma * sigma);
+                double value = Math.exp(exponent) / (2 * Math.PI * sigma * sigma);
+                filter[i][j] = value;
+                //sum+= value;
+            }
+        }
+        /*
+        // Normalize the filter
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                filter[i][j] /= sum;
+                System.out.print(filter[i][j] + "     ");
+            }
+            System.out.println();
+        }
+
+         */
+
+        return filter;
+    }
+
+    public static double getFilterSum(double[][] filter) {
+        double sum = 0;
         for (int i = 0; i < filter.length; i++) {
-            for (int j = 0; j < filter.length; j++) {
-                sum += filter[i][j];
+            for (int j = 0; j < filter[0].length; j++) {
+                if (filter[i][j] > 0) {
+                    sum += filter[i][j];
+                }
             }
         }
         return sum;
@@ -56,7 +89,7 @@ public class Bildeditor {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
 
-                double theta = 2*PI * x / width;
+                double theta = 2 * PI * x / width;
                 double r = y;
                 int polarX = (int) (r * Math.cos(theta) + width / 2);
                 int polarY = (int) (r * Math.sin(theta) + height / 2);
@@ -68,26 +101,43 @@ public class Bildeditor {
         }
         return polarImage;
     }
-    public static WritableImage applyGradiant(Image image) {
-        int[][] temp = new int[9][9];
-        int sum = 0;
-        for (int i = 0; i < temp.length; i++) {
-            for (int j = 0; j < temp[0].length; j++) {
+    public static WritableImage invertColor(Image image) {
 
-            }
-        }
         int width = (int) image.getWidth();
         int height = (int) image.getHeight();
         WritableImage newImage = new WritableImage(width, height);
         PixelReader reader = image.getPixelReader();
         PixelWriter writer = newImage.getPixelWriter();
-        int posXDiff = (int) (temp.length/2) + 1;
-        int posYDiff = (int) (temp[0].length/2) + 1;
-        for (int i = 0; i < width-temp.length; i++) {
-            for (int j = 0; j < width-temp[0].length; j++) {
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                writer.setColor(i, j, reader.getColor(i, j).invert());
             }
         }
-
+        return newImage;
+    }
+    public static WritableImage applyGradiant(Image image, double[][] filter) {
+        double sum = getFilterSum(filter);
+        int width = (int) image.getWidth();
+        int height = (int) image.getHeight();
+        WritableImage newImage = new WritableImage(width, height);
+        PixelReader reader = image.getPixelReader();
+        PixelWriter writer = newImage.getPixelWriter();
+        int posXDiff = (int) (filter.length / 2) + 1;
+        int posYDiff = (int) (filter[0].length / 2) + 1;
+        double currentSum = 0.0;
+        for (int i = 0; i < width - filter.length; i++) {
+            for (int j = 0; j < height - filter[0].length; j++) {
+                currentSum = 0;
+                for (int x = 0; x < filter.length; x++) {
+                    for (int y = 0; y < filter[0].length; y++) {
+                        currentSum += filter[x][y] * reader.getColor(x + i, y + j).getBrightness();
+                    }
+                }
+                currentSum = 255 * abs(currentSum);
+                currentSum /= sum;
+                writer.setColor(i + posXDiff, j + posYDiff, Color.rgb((int) currentSum, (int) currentSum, (int) currentSum));
+            }
+        }
 
         return newImage;
     }

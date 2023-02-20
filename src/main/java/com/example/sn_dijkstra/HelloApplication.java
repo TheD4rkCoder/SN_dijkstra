@@ -41,8 +41,13 @@ public class HelloApplication extends Application {
         }
 
          */
-
         saveImage(wImage);
+        double[][] filter = Bildeditor.generateGaussianFilter(21, 18);
+        wImage = Bildeditor.applyGradiant(wImage, filter);
+        wImage = Bildeditor.applyGradiant(wImage, Bildeditor.gradientFilter);
+        wImage = Bildeditor.applyGradiant(wImage, filter);
+        wImage = Bildeditor.invertColor(wImage);
+        //wImage = Bildeditor.applyGradiant(wImage, Bildeditor.gradientFilterV);
         showImage(stage);
 
     }
@@ -59,8 +64,8 @@ public class HelloApplication extends Application {
         image = new Image(inputstream);
         pixelReader = image.getPixelReader();
         wImage = Bildeditor.convertToPolarCoordinates(image);
+        //wImage = Bildeditor.applyGradiant(wImage, Bildeditor.gradientFilter);
         PixelWriter pixelWriter = wImage.getPixelWriter();
-
     }
     static void showImage(Stage stage) {
         ImageView imageView = new ImageView();

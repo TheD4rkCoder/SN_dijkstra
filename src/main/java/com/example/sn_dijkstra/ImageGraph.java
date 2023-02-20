@@ -39,7 +39,6 @@ public class ImageGraph {
             nodes[0][0] = new Node(0,0,0);      //Startknoten einfuegen
             nodes[width + 1][0] = new Node(width + 1,0,Integer.MAX_VALUE);      //Endknoten einfuegen
 
-
             // create a Node for each pixel
             for (int i = 1; i < width - 1; i++) {
                 for (int j = 0; j < height; j++) {
@@ -53,13 +52,13 @@ public class ImageGraph {
             // connect adjacent nodes with weighted edges
             for (int i = 1; i < width; i++) {
                 for (int j = 0; j < height; j++) {
-                    if (i > 0) {
+                    if (i > 1) {
                         nodes[i][j].addNeighbor(nodes[i - 1][j]);
                     }
                     if (j > 0) {
                         nodes[i][j].addNeighbor(nodes[i][j - 1]);
                     }
-                    if (i < width - 1) {
+                    if (i < width) {
                         nodes[i][j].addNeighbor(nodes[i + 1][j]);
                     }
                     if (j < height - 1) {
@@ -88,7 +87,7 @@ public class ImageGraph {
         // Draw nodes as small squares
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                Node node = nodes[i][j];
+                Node node = nodes[i+1][j];
                 int colorValue = node.getCost(); // Grayscale color
                 Color nodeColor = new Color(colorValue, colorValue, colorValue);
                 for (int x = i - 1; x <= i + 1; x++) {
@@ -104,7 +103,7 @@ public class ImageGraph {
         // Draw edges as lines
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                Node node = nodes[i][j];
+                Node node = nodes[i+1][j];
                 for (Node neighbor : node.getNeighbors()) {
                     int x1 = node.getX();
                     int y1 = node.getY();
