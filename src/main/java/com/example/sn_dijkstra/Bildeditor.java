@@ -101,6 +101,7 @@ public class Bildeditor {
         }
         return polarImage;
     }
+
     public static WritableImage invertColor(Image image) {
 
         int width = (int) image.getWidth();
@@ -115,6 +116,37 @@ public class Bildeditor {
         }
         return newImage;
     }
+
+    public static WritableImage reduceResolution(Image image, int pixelsToMerge) {
+
+        int width = (int) image.getWidth();
+        int height = (int) image.getHeight();
+        int newWidth = (int) (width / pixelsToMerge) + 1;
+        int newHeight = (int) (height / pixelsToMerge) + 1;
+        WritableImage newImage = new WritableImage(newWidth, newHeight);
+        PixelReader reader = image.getPixelReader();
+        PixelWriter writer = newImage.getPixelWriter();
+        double averageColor;
+        double divisor;
+        for (int i = 0; i < newWidth; i++) {
+            for (int j = 0; j < newHeight; j++) {
+                averageColor = 0.0;
+                divisor = 0;
+                for (int k = i; k < pixelsToMerge; k++) {
+                    for (int l = j; l < pixelsToMerge; l++) {
+                        if (i * pixelsToMerge + k < width && j * pixelsToMerge + l < height) {
+                            averageColor += reader.getColor(i * pixelsToMerge + k, j * pixelsToMerge + l).getBrightness();
+                            divisor++;
+                        }
+                    }
+                }
+                averageColor = averageColor * 255 / divisor;
+                writer.setColor(i, j, Color.rgb((int) averageColor, (int) averageColor, (int) averageColor));
+            }
+        }
+        return newImage;
+    }
+
     public static WritableImage applyGradiant(Image image, double[][] filter) {
         double sum = getFilterSum(filter);
         int width = (int) image.getWidth();
