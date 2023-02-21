@@ -7,6 +7,7 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
+import java.util.Comparator;
 import java.util.PriorityQueue;
 
 public class Djikstra {
@@ -75,7 +76,17 @@ public class Djikstra {
         Node[][] nodes = graph.nodes;
 
         int nodeAmount = graph.getWidth() * graph.getHeight() + 2;  // +2 wegen ein Knoten zu Beginn und einen am Ende
-        PriorityQueue<Node> queue = new PriorityQueue<>();
+        PriorityQueue<Node> queue = new PriorityQueue<Node>(new Comparator<Node>() {
+            @Override
+            public int compare(Node o1, Node o2) {
+                if(o1.getCost() < o2.getCost()){
+                    return 1;
+                }else if(o1.getCost() > o2.getCost()){
+                    return -1;
+                }
+                return 0;
+            }
+        });
 
         distances = new int[graph.getHeight()][graph.getWidth()];
         parents = new Node[graph.getHeight()][graph.getWidth()];
@@ -98,10 +109,12 @@ public class Djikstra {
                 int dist = distances[u.getX()][u.getY()] + neighbor.getCost();
                 if(queue.contains(neighbor) && distances[neighbor.getX()][neighbor.getY()] > dist){
                     distances[neighbor.getX()][neighbor.getY()] = dist;
+                    neighbor.setCost(dist);
                     parents[neighbor.getX()][neighbor.getY()] = u;
                 } else if (parents[neighbor.getX()][neighbor.getY()] == null) {
                     distances[neighbor.getX()][neighbor.getY()] = dist;
                     parents[neighbor.getX()][neighbor.getY()] = u;
+                    neighbor.setCost(dist);
                     queue.add(neighbor);
                 }
             }
@@ -110,3 +123,19 @@ public class Djikstra {
 
 
 }
+
+/*
+*         FileInputStream inputstream = null;
+        try {
+            inputstream = new FileInputStream("src/main/resources/com/example/sn_dijkstra/data/IMG_1.jpg"); // use other file names
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        Image tryImage = new Image(inputstream);
+        ImageGraph imageGraph = new ImageGraph (tryImage);
+        Djikstra djikstra = new Djikstra(imageGraph);
+        djikstra.startDjikstra();
+        Boolean [][] shortestP = djikstra.getShortestPathTo(imageGraph.getWidth() + 1, 0);
+        Image image1 = Djikstra.applyShortestPathToImage(image,shortestP);
+        saveImage(wImage);
+        * */
