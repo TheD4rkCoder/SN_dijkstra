@@ -18,6 +18,7 @@ public class ImageGraph {
     private int width;
     private int height;
 
+
     public Node[][] getNodes() {
         return nodes;
     }
@@ -47,7 +48,7 @@ public class ImageGraph {
             }
         }
 
-        //Umbauen nou auf gerichtet
+
         // connect adjacent nodes with weighted edges
         for (int i = 1; i < width; i++) {
             for (int j = 0; j < height; j++) {
@@ -132,8 +133,13 @@ public class ImageGraph {
 /*
 package com.example.sn_dijkstra;
 
+
+
 import javax.imageio.ImageIO;
-import java.awt.*;
+import javafx.scene.image.*;
+
+import javafx.scene.paint.Color;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -155,15 +161,15 @@ public class ImageGraph {
         return height;
     }
 
-    public static ImageGraph startConverting() {
+    public static ImageGraph startConverting() throws IOException {
         String filename = "img1.png";
-        return new ImageGraph(filename);    //mocht a output.png, lei um zu schaugen obs geat
+        return new ImageGraph(ImageIO.read(new File(filename)));    //mocht a output.png, lei um zu schaugen obs geat
 
     }
 
-    public ImageGraph(String filename) {
+    public ImageGraph(Image filename) {
         try {
-            BufferedImage image = ImageIO.read(new File(filename));
+            BufferedImage image = (BufferedImage) filename;
             width = image.getWidth();
             height = image.getHeight();
             nodes = new Node[width][height];
