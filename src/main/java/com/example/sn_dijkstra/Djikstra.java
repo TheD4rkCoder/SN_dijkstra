@@ -88,14 +88,14 @@ public class Djikstra {
             }
         });
 
-        distances = new int[graph.getHeight()][graph.getWidth()];
-        parents = new Node[graph.getHeight()][graph.getWidth()];
+        distances = new int[graph.getHeight()][graph.getWidth() + 2];
+        parents = new Node[graph.getHeight()][graph.getWidth() + 2];
 
         distances[0][0] = 0;
         parents[0][0] = null;
         queue.add(nodes[0][0]);
 
-        for (int i = 1; i < graph.getWidth(); i++) {
+        for (int i = 1; i < graph.getWidth() + 1; i++) {
             for (int j = 0; j < graph.getHeight(); j++) {
                 distances[i][j] = Integer.MAX_VALUE;
                 parents[i][j] = null;
