@@ -6,7 +6,7 @@ import java.util.List;
 class Node {
     private final int x;
     private final int y;
-    private final int cost;
+    private int cost;
     private List<Node> neighbors;
 
     public Node(int x, int y, int cost) {
@@ -26,6 +26,10 @@ class Node {
 
     public int getCost() {
         return cost;
+    }
+
+    public void setCost(int cost) {
+        this.cost = cost;
     }
 
     public List<Node> getNeighbors() {

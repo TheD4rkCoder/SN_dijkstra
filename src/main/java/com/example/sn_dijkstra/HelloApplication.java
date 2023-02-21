@@ -53,6 +53,11 @@ public class HelloApplication extends Application {
         //wImage = Bildeditor.applyGradiant(wImage, Bildeditor.gradientFilterV);
         showImage(stage);
 
+        Djikstra djikstra = new Djikstra(imageGraph);
+        djikstra.startDjikstra();
+        Boolean [][] shortestP = djikstra.getShortestPathTo(imageGraph.getWidth() + 1, 0);
+        WritableImage image1 = Djikstra.applyShortestPathToImage(wImage,shortestP);
+        saveImage(image1);
     }
 
 
