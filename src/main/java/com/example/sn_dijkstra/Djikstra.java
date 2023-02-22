@@ -37,12 +37,14 @@ public class Djikstra {
         WritableImage newImage = new WritableImage((int) image.getWidth(), (int) image.getHeight());
         PixelReader reader = image.getPixelReader();
         PixelWriter writer = newImage.getPixelWriter();
-        for (int i = 0; i < image.getHeight(); i++) {
-            for (int j = 0; j < image.getWidth(); j++) {
+        int x = 0;
+        int y = 0;
+        for (int i = 1; i < image.getWidth() + 1; i++, x++) {
+            for (int j = 0; j < image.getHeight(); j++, y++) {
                 if(shortestP[i][j]){
-                    writer.setColor(i,j, Color.ALICEBLUE);
+                    writer.setColor(x,y, Color.ALICEBLUE);
                 }else {
-                    writer.setColor(i,j, reader.getColor(i,j));
+                    writer.setColor(x,y, reader.getColor(x,y));
                 }
             }
         }
@@ -50,9 +52,10 @@ public class Djikstra {
     }
 
     public Boolean[][] getShortestPathTo(int x, int y){
-        shortestP = new Boolean[graph.getWidth()][graph.getHeight()];
-        for (int i = 0; i < shortestP.length; i++) {
-            for (int j = 0; j < graph.getWidth() + 2; j++) {
+        shortestP = new Boolean[graph.getWidth() + 2][graph.getHeight()];
+        //zu Beginn alle auf false setzen
+        for (int i = 0; i < graph.getWidth() + 2 ; i++) {
+            for (int j = 0; j < graph.getHeight(); j++) {
                 if(i != 0 && j != 0 && j != graph.getWidth() + 1){
                     shortestP[i][j] = false;
                 }else {
@@ -61,8 +64,13 @@ public class Djikstra {
             }
         }
 
-        int nowX = parents[x][y].getX();
-        int nowY = parents[x][y].getY();
+        int nowX = 0;
+        int nowY = 0;
+        //zum Parent von aktuellem Knoten wechseln und jeweils in shortestP auf true setzen
+        nowX = parents[x][y].getX();
+        nowY = parents[x][y].getY();
+
+
         while(nowX != 0 && nowY != 0){
             shortestP[nowX][nowY] = true;
             //Parent holen
@@ -88,8 +96,8 @@ public class Djikstra {
             }
         });
 
-        distances = new int[graph.getHeight()][graph.getWidth() + 2];
-        parents = new Node[graph.getHeight()][graph.getWidth() + 2];
+        distances = new int[graph.getWidth() + 2][graph.getHeight()];
+        parents = new Node[graph.getWidth() + 2][graph.getHeight()];
 
         distances[0][0] = 0;
         parents[0][0] = null;
@@ -110,15 +118,20 @@ public class Djikstra {
                 if(queue.contains(neighbor) && distances[neighbor.getX()][neighbor.getY()] > dist){
                     distances[neighbor.getX()][neighbor.getY()] = dist;
                     neighbor.setCost(dist);
-                    parents[neighbor.getX()][neighbor.getY()] = u;
+                    parents[neighbor.getX()][neighbor.getY()] = new Node(u.getX(),u.getY(),u.getCost());;
                 } else if (parents[neighbor.getX()][neighbor.getY()] == null) {
                     distances[neighbor.getX()][neighbor.getY()] = dist;
-                    parents[neighbor.getX()][neighbor.getY()] = u;
+                    parents[neighbor.getX()][neighbor.getY()] = new Node(u.getX(),u.getY(),u.getCost());
                     neighbor.setCost(dist);
                     queue.add(neighbor);
                 }
+                //wenn man bei
+                if(neighbor.getX() == graph.getWidth() + 1 && neighbor.getY() == 0){
+                    System.out.println("last");
+                }
             }
         }
+        System.out.println("end");
     }
 
 

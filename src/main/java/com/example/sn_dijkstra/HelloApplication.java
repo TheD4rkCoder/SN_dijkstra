@@ -42,8 +42,8 @@ public class HelloApplication extends Application {
 
          */
         double[][] filter = Bildeditor.generateGaussianFilter(21, 18);
-        wImage = Bildeditor.applyFilter(wImage, filter);
-        wImage = Bildeditor.applyFilter(wImage, Bildeditor.gradientFilter);
+        //wImage = Bildeditor.applyFilter(wImage, filter);
+        //wImage = Bildeditor.applyFilter(wImage, Bildeditor.gradientFilter);
         //wImage = Bildeditor.applyGradiant(wImage, filter);
         wImage = Bildeditor.invertColor(wImage);
         wImage = Bildeditor.reduceResolution(wImage, 25);
