@@ -37,14 +37,12 @@ public class Djikstra {
         WritableImage newImage = new WritableImage((int) image.getWidth(), (int) image.getHeight());
         PixelReader reader = image.getPixelReader();
         PixelWriter writer = newImage.getPixelWriter();
-        int x = 0;
-        int y = 0;
-        for (int i = 1; i < image.getWidth() + 1; i++, x++) {
-            for (int j = 0; j < image.getHeight(); j++, y++) {
-                if(shortestP[i][j]){
-                    writer.setColor(x,y, Color.ALICEBLUE);
+        for (int i = 0; i < image.getWidth(); i++) {
+            for (int j = 0; j < image.getHeight(); j++) {
+                if(shortestP[i + 1][j]){
+                    writer.setColor(i,j, Color.ALICEBLUE);
                 }else {
-                    writer.setColor(x,y, reader.getColor(x,y));
+                    writer.setColor(i,j, reader.getColor(i,j));
                 }
             }
         }
@@ -56,7 +54,7 @@ public class Djikstra {
         //zu Beginn alle auf false setzen
         for (int i = 0; i < graph.getWidth() + 2 ; i++) {
             for (int j = 0; j < graph.getHeight(); j++) {
-                if(i != 0 && j != 0 && j != graph.getWidth() + 1){
+                if(i != 0 && j != graph.getWidth() + 1){
                     shortestP[i][j] = false;
                 }else {
                     shortestP[i][j] = true;
@@ -64,14 +62,11 @@ public class Djikstra {
             }
         }
 
-        int nowX = 0;
-        int nowY = 0;
         //zum Parent von aktuellem Knoten wechseln und jeweils in shortestP auf true setzen
-        nowX = parents[x][y].getX();
-        nowY = parents[x][y].getY();
+        int nowX = parents[x][y].getX();
+        int nowY = parents[x][y].getY();
 
-
-        while(nowX != 0 && nowY != 0){
+        while(nowX != 0){
             shortestP[nowX][nowY] = true;
             //Parent holen
             nowX = parents[nowX][nowY].getX();
@@ -87,9 +82,9 @@ public class Djikstra {
         PriorityQueue<Node> queue = new PriorityQueue<Node>(new Comparator<Node>() {
             @Override
             public int compare(Node o1, Node o2) {
-                if(o1.getCost() < o2.getCost()){
+                if(distances[o1.getX()][o1.getY()] < distances[o2.getX()][o2.getY()]){
                     return 1;
-                }else if(o1.getCost() > o2.getCost()){
+                }else if(distances[o1.getX()][o1.getY()] > distances[o2.getX()][o2.getY()]){
                     return -1;
                 }
                 return 0;
@@ -101,6 +96,8 @@ public class Djikstra {
 
         distances[0][0] = 0;
         parents[0][0] = null;
+        distances[graph.getWidth() + 1][0] = Integer.MAX_VALUE;
+        parents[graph.getWidth() + 1][0] = null;
         queue.add(nodes[0][0]);
 
         for (int i = 1; i < graph.getWidth() + 1; i++) {
@@ -114,20 +111,19 @@ public class Djikstra {
         while(!queue.isEmpty()){
             Node u = queue.poll();      //gibt das kleinste Element aus der Queue und loescht es von dort
             for (Node neighbor : u.getNeighbors()) {
-                int dist = distances[u.getX()][u.getY()] + neighbor.getCost();
-                if(queue.contains(neighbor) && distances[neighbor.getX()][neighbor.getY()] > dist){
-                    distances[neighbor.getX()][neighbor.getY()] = dist;
-                    neighbor.setCost(dist);
-                    parents[neighbor.getX()][neighbor.getY()] = new Node(u.getX(),u.getY(),u.getCost());;
-                } else if (parents[neighbor.getX()][neighbor.getY()] == null) {
-                    distances[neighbor.getX()][neighbor.getY()] = dist;
-                    parents[neighbor.getX()][neighbor.getY()] = new Node(u.getX(),u.getY(),u.getCost());
-                    neighbor.setCost(dist);
-                    queue.add(neighbor);
-                }
-                //wenn man bei
                 if(neighbor.getX() == graph.getWidth() + 1 && neighbor.getY() == 0){
                     System.out.println("last");
+                }
+                int dist = distances[u.getX()][u.getY()] + neighbor.getCost();
+                if (parents[neighbor.getX()][neighbor.getY()] == null) {
+                    distances[neighbor.getX()][neighbor.getY()] = dist;
+                    parents[neighbor.getX()][neighbor.getY()] = u;
+                    queue.add(neighbor);
+                    continue;
+                }
+                if(queue.contains(neighbor) && distances[neighbor.getX()][neighbor.getY()] > dist){
+                    distances[neighbor.getX()][neighbor.getY()] = dist;
+                    parents[neighbor.getX()][neighbor.getY()] = u;
                 }
             }
         }

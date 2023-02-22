@@ -38,24 +38,29 @@ public class ImageGraph {
         height = (int) image.getHeight();
         nodes = new Node[width + 2][height];    //width + 2 wegen Anfangs und Endknoten
 
-        nodes[0][0] = new Node(0,0,0);      //Startknoten einfuegen
-        nodes[width + 1][0] = new Node(width + 1,0,255);      //Endknoten einfuegen
+        nodes[0][0] = new Node(0, 0, 0);      //Startknoten einfuegen
+        nodes[width + 1][0] = new Node(width + 1, 0, 0);      //Endknoten einfuegen
 
         // create a Node for each pixel
         for (int i = 1; i < width + 1; i++) {
             for (int j = 0; j < height; j++) {
-                nodes[i][j] = new Node(i, j, (int)(255 *reader.getColor(i-1, j).getBrightness()));
+                nodes[i][j] = new Node(i, j, (int) (255 * reader.getColor(i - 1, j).getBrightness()));
             }
         }
 
 
         // connect adjacent nodes with weighted edges
-        for (int i = 1; i < width; i++) {
+        for (int i = 1; i < width + 1; i++) {
             for (int j = 0; j < height; j++) {
                 for (int k = i + 1; k < i + 6; k++) {
                     for (int l = j - 2; l < j + 2; j++) {
-                        if (k < width && l >= 0 && l < height) {
-                            nodes[i][j].addNeighbor(nodes[k][l]);
+                        if (l >= 0 && l < height) {
+                            if (k < width + 1) {
+                                nodes[i][j].addNeighbor(nodes[k][l]);
+                            } else if (k == width + 1) {
+                                nodes[i][j].addNeighbor(nodes[k][0]);
+                                break;
+                            }
                         }
                     }
                 }
@@ -72,12 +77,12 @@ public class ImageGraph {
     }
 
     public WritableImage drawGraphImage(Image image) {
-        WritableImage wImage = new WritableImage((int)image.getWidth(), (int)image.getHeight());
+        WritableImage wImage = new WritableImage((int) image.getWidth(), (int) image.getHeight());
         PixelWriter writer = wImage.getPixelWriter();
         // Draw nodes as small squares
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                Node node = nodes[i+1][j];
+                Node node = nodes[i + 1][j];
                 int colorValue = node.getCost(); // Grayscale color
                 for (int x = i - 1; x <= i + 1; x++) {
                     for (int y = j - 1; y <= j + 1; y++) {
@@ -92,7 +97,7 @@ public class ImageGraph {
         // Draw edges as lines
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                Node node = nodes[i+1][j];
+                Node node = nodes[i + 1][j];
                 for (Node neighbor : node.getNeighbors()) {
                     int x1 = node.getX();
                     int y1 = node.getY();
@@ -104,7 +109,7 @@ public class ImageGraph {
             }
         }
 
-       return wImage;
+        return wImage;
     }
 
     private void drawLine(PixelWriter writer, int x1, int y1, int x2, int y2, int brightness) {

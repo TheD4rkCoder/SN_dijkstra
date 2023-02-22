@@ -30,42 +30,33 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
-        loadImage();
+        //loadImage("src/main/resources/com/example/sn_dijkstra/data/IMG_1.jpg");
+        loadImage("image.png");
 
-        /*
-        PixelWriter pw = wImage.getPixelWriter();
-        for (int i = 0; i < 1900; i++) {
-            for (int j = 0; j < 1900; j++) {
-                pw.setColor(i,j,Color.DARKBLUE);
-            }
-        }
-
-         */
-        double[][] filter = Bildeditor.generateGaussianFilter(21, 18);
+        //double[][] filter = Bildeditor.generateGaussianFilter(21, 18);
         //wImage = Bildeditor.applyFilter(wImage, filter);
         //wImage = Bildeditor.applyFilter(wImage, Bildeditor.gradientFilter);
         //wImage = Bildeditor.applyGradiant(wImage, filter);
-        wImage = Bildeditor.invertColor(wImage);
-        wImage = Bildeditor.reduceResolution(wImage, 25);
+        //wImage = Bildeditor.invertColor(wImage);
+        //wImage = Bildeditor.reduceResolution(wImage, 25);
         ImageGraph imageGraph = new ImageGraph(wImage);
-        //wImage = imageGraph.drawGraphImage(wImage);
-        //saveImage(wImage);
-        //wImage = Bildeditor.applyGradiant(wImage, Bildeditor.gradientFilterV);
+        // saveImage(wImage);
         showImage(stage);
 
         Djikstra djikstra = new Djikstra(imageGraph);
         djikstra.startDjikstra();
-        Boolean [][] shortestP = djikstra.getShortestPathTo(imageGraph.getWidth() + 1, 0);
-        WritableImage image1 = Djikstra.applyShortestPathToImage(wImage,shortestP);
-        saveImage(image1);
+        Boolean[][] shortestP = djikstra.getShortestPathTo(1, 0);
+        wImage = Djikstra.applyShortestPathToImage(wImage,shortestP);
+        showImage(stage);
+        //saveImage(image1);
     }
 
 
 
-    static public void loadImage() {
+    static public void loadImage(String path) {
         FileInputStream inputstream = null;
         try {
-            inputstream = new FileInputStream("src/main/resources/com/example/sn_dijkstra/data/IMG_1.jpg"); // use other file names
+            inputstream = new FileInputStream(path); // use other file names
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
