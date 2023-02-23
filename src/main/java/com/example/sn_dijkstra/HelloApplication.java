@@ -30,11 +30,12 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
-        loadImage("src/main/resources/com/example/sn_dijkstra/data/IMG_5.png");
+        loadImage("src/main/resources/com/example/sn_dijkstra/data/IMG_2.png");
         //loadImage("image.png");
 
         ///*
         wImage = Bildeditor.convertToPolarCoordinates(image, (int)image.getWidth()/2 - 20);
+        WritableImage beginImage = wImage;
         double[][] filter = Bildeditor.generateGaussianFilter(51, 25);
         wImage = Bildeditor.applyFilter(wImage, filter);
         wImage = Bildeditor.applyFilter(wImage, Bildeditor.gradientFilterV);
@@ -58,9 +59,9 @@ public class HelloApplication extends Application {
         djikstra.startDjikstra();
         Boolean[][] shortestP = djikstra.getShortestPathTo((int)(wImage.getWidth() + 1), 0);
         System.out.println("finished");
-        wImage = Djikstra.applyShortestPathToImage(wImage,shortestP);
+        beginImage = Djikstra.applyShortestPathToImage(beginImage,shortestP);
         //saveImage(image1);
-        showImage(stage);
+        showImage(stage, beginImage);
     }
 
 
@@ -76,9 +77,9 @@ public class HelloApplication extends Application {
         pixelReader = image.getPixelReader();
         //wImage = Bildeditor.applyGradiant(wImage, Bildeditor.gradientFilter);
     }
-    static void showImage(Stage stage) {
+    static void showImage(Stage stage, Image image) {
         ImageView imageView = new ImageView();
-        imageView.setImage(wImage);
+        imageView.setImage(image);
         imageView.setFitWidth(600);
         imageView.setPreserveRatio(true);
         Group root = new Group(imageView);
