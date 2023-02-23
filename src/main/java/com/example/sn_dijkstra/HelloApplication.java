@@ -34,27 +34,27 @@ public class HelloApplication extends Application {
         loadImage("image.png");
 
         /*
+        wImage = Bildeditor.convertToPolarCoordinates(image);
         double[][] filter = Bildeditor.generateGaussianFilter(21, 18);
         wImage = Bildeditor.applyFilter(wImage, filter);
         wImage = Bildeditor.applyFilter(wImage, Bildeditor.gradientFilter);
-        wImage = Bildeditor.applyFilter(wImage, filter);
-        //wImage = Bildeditor.invertColor(wImage);
-        wImage = Bildeditor.reduceResolution(wImage, 50);
-        System.out.println("saved");
+        wImage = Bildeditor.invertColor(wImage);
+        wImage = Bildeditor.reduceResolution(wImage, 10);
         saveImage(wImage);
-         */
+        System.out.println("saved");
+        */
         System.out.println("begin building graph");
         Long time = System.currentTimeMillis();
-        ImageGraph imageGraph = new ImageGraph(wImage);
-        System.out.println("graph built: " + (System.currentTimeMillis() - time));
+        ImageGraph imageGraph = new ImageGraph(image);
+        System.out.println("graph built: " + (System.currentTimeMillis() - time) + "ms");
 
         Djikstra djikstra = new Djikstra(imageGraph);
         djikstra.startDjikstra();
-        Boolean[][] shortestP = djikstra.getShortestPathTo((int)(wImage.getWidth() + 1), 0);
+        Boolean[][] shortestP = djikstra.getShortestPathTo((int)(image.getWidth() + 1), 0);
         System.out.println("finished");
-        wImage = Djikstra.applyShortestPathToImage(wImage,shortestP);
-        showImage(stage);
+        wImage = Djikstra.applyShortestPathToImage(image,shortestP);
         //saveImage(image1);
+        showImage(stage);
     }
 
 
@@ -68,9 +68,7 @@ public class HelloApplication extends Application {
         }
         image = new Image(inputstream);
         pixelReader = image.getPixelReader();
-        wImage = Bildeditor.convertToPolarCoordinates(image);
         //wImage = Bildeditor.applyGradiant(wImage, Bildeditor.gradientFilter);
-        PixelWriter pixelWriter = wImage.getPixelWriter();
     }
     static void showImage(Stage stage) {
         ImageView imageView = new ImageView();

@@ -113,9 +113,6 @@ public class Djikstra {
             Node u = queue.poll();      //gibt das kleinste Element aus der Queue und loescht es von dort
             for (int i = 0; i < u.getAmountOfNeighbors(); i++) {
                 Node neighbor = u.getNeighbors().get(i);
-                if(neighbor.getX() == graph.getWidth() + 1 && neighbor.getY() == 0){
-                    System.out.println("last");
-                }
                 int dist = distances[u.getX()][u.getY()] + neighbor.getCost();
                 if (parents[neighbor.getX()][neighbor.getY()] == null) {
                     distances[neighbor.getX()][neighbor.getY()] = dist;
