@@ -34,8 +34,9 @@ public class Bildeditor {
             {1, 6, 10, 13, 21, 13, 10, 6, 1},
             {0, 1, 2, 6, 9, 6, 2, 1, 0},
     };
-    static double[][] gradientFilter = {{-1, -2, -5, -2, -1, 0, 1, 2, 5, 2, 1}};
-    static double[][] gradientFilterV = {{-1}, {-2}, {-1}, {0}, {1}, {2}, {1}};
+    static double[][] gradientFilterV = {{-1, -2, -4, -6, -4, -2, -1, 0, 1, 2, 4, 5, 4, 2, 1}};
+    static double[][] gradientFilterH = {{-1}, {-2}, {-1}, {0}, {1}, {2}, {1}};
+    static double[][] testFilter = {{-1, 0, 1}};
 
 
     public static double[][] generateGaussianFilter(int size, double sigma) {
@@ -78,16 +79,20 @@ public class Bildeditor {
         }
         return sum;
     }
-
     public static WritableImage convertToPolarCoordinates(Image image) {
         int width = (int) image.getWidth();
         int height = (int) image.getHeight();
-        int heightToCut = (height > width) ? width / 2 : height / 2;
-        WritableImage polarImage = new WritableImage(width, heightToCut);
+        return convertToPolarCoordinates(image, (height > width) ? width / 2 : height / 2);
+    }
+
+        public static WritableImage convertToPolarCoordinates(Image image, int radius) {
+        int width = (int) image.getWidth();
+        int height = (int) image.getHeight();
+        WritableImage polarImage = new WritableImage(width, radius);
         PixelReader reader = image.getPixelReader();
         PixelWriter writer = polarImage.getPixelWriter();
 
-        for (int y = 0; y < heightToCut; y++) {
+        for (int y = 0; y < radius; y++) {
             for (int x = 0; x < width; x++) {
 
                 double theta = 2 * PI * x / width;
@@ -147,7 +152,32 @@ public class Bildeditor {
         }
         return newImage;
     }
+    public static WritableImage saturateGrayscaleImage(Image image) {
+        int width = (int) image.getWidth();
+        int height = (int) image.getHeight();
+        WritableImage newImage = new WritableImage(width, height);
+        PixelReader reader = image.getPixelReader();
+        PixelWriter writer = newImage.getPixelWriter();
+        double minCost = 1;
+        double maxCost = 0;
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                double temp = reader.getColor(i, j).getBrightness();
+                maxCost = Math.max(maxCost, temp);
+                minCost = Math.min(minCost, temp);
+            }
+        }
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                int brightness =  (int)(255 * (reader.getColor(i, j).getBrightness() - minCost) / (maxCost-minCost));
+                writer.setColor(i, j, Color.rgb(brightness, brightness, brightness));
+            }
+        }
 
+
+
+        return newImage;
+    }
     public static WritableImage applyFilter(Image image, double[][] filter) {
 
         int width = (int) image.getWidth();
@@ -166,13 +196,16 @@ public class Bildeditor {
                 tempSumNegative = 0;
                 for (int x = -filterHalfX; x <= filterHalfX; x++) {
                     for (int y = -filterHalfY; y <= filterHalfY; y++) {
+                        if (filter[x + filterHalfX][y + filterHalfY] > 0) {
+                            tempSumPositive += filter[x + filterHalfX][y + filterHalfY];
+                        } else {
+                            tempSumNegative += filter[x + filterHalfX][y + filterHalfY];
+                        }
                         if (x + i >= 0 && x + i < width && y + j >= 0 && y + j < height) {
                             currentSum += filter[x + filterHalfX][y + filterHalfY] * reader.getColor(x + i, y + j).getBrightness();
-                            if (filter[x + filterHalfX][y + filterHalfY] > 0) {
-                                tempSumPositive += filter[x + filterHalfX][y + filterHalfY];
-                            } else {
-                                tempSumNegative += filter[x + filterHalfX][y + filterHalfY];
-                            }
+                        } else {
+                            currentSum += filter[x + filterHalfX][y + filterHalfY] * reader.getColor((x + i < 0) ? 0 : (x + i < width) ? x + i : width - 1, (y + j < 0) ? 0 : (y + j < height) ? y + j : height - 1).getBrightness();
+
                         }
                     }
                 }

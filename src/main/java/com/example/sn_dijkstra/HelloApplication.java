@@ -30,29 +30,36 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
-        //loadImage("src/main/resources/com/example/sn_dijkstra/data/IMG_1.jpg");
-        loadImage("image.png");
+        loadImage("src/main/resources/com/example/sn_dijkstra/data/IMG_2.png");
+        //loadImage("image.png");
 
-        /*
-        wImage = Bildeditor.convertToPolarCoordinates(image);
+        ///*
+        wImage = Bildeditor.convertToPolarCoordinates(image, (int)image.getWidth()/2 - 20);
         double[][] filter = Bildeditor.generateGaussianFilter(21, 18);
         wImage = Bildeditor.applyFilter(wImage, filter);
-        wImage = Bildeditor.applyFilter(wImage, Bildeditor.gradientFilter);
-        wImage = Bildeditor.invertColor(wImage);
-        wImage = Bildeditor.reduceResolution(wImage, 10);
+        wImage = Bildeditor.saturateGrayscaleImage(wImage);
+        wImage = Bildeditor.applyFilter(wImage, Bildeditor.gradientFilterV);
+        wImage = Bildeditor.applyFilter(wImage, filter);
+        wImage = Bildeditor.saturateGrayscaleImage(wImage);
+        wImage = Bildeditor.applyFilter(wImage, filter);
+        //wImage = Bildeditor.invertColor(wImage);
+        wImage = Bildeditor.reduceResolution(wImage, 5);
+        wImage = Bildeditor.saturateGrayscaleImage(wImage);
+        wImage = Bildeditor.applyFilter(wImage, Bildeditor.generateGaussianFilter(9, 5));
+        wImage = Bildeditor.saturateGrayscaleImage(wImage);
         saveImage(wImage);
         System.out.println("saved");
-        */
+        //*/
         System.out.println("begin building graph");
         Long time = System.currentTimeMillis();
-        ImageGraph imageGraph = new ImageGraph(image);
+        ImageGraph imageGraph = new ImageGraph(wImage);
         System.out.println("graph built: " + (System.currentTimeMillis() - time) + "ms");
 
         Djikstra djikstra = new Djikstra(imageGraph);
         djikstra.startDjikstra();
-        Boolean[][] shortestP = djikstra.getShortestPathTo((int)(image.getWidth() + 1), 0);
+        Boolean[][] shortestP = djikstra.getShortestPathTo((int)(wImage.getWidth() + 1), 0);
         System.out.println("finished");
-        wImage = Djikstra.applyShortestPathToImage(image,shortestP);
+        wImage = Djikstra.applyShortestPathToImage(wImage,shortestP);
         //saveImage(image1);
         showImage(stage);
     }

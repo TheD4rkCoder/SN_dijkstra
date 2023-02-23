@@ -40,7 +40,7 @@ public class Djikstra {
         for (int i = 0; i < image.getWidth(); i++) {
             for (int j = 0; j < image.getHeight(); j++) {
                 if(shortestP[i + 1][j]){
-                    writer.setColor(i,j, Color.BLACK);
+                    writer.setColor(i,j, Color.RED);
                 }else {
                     writer.setColor(i,j, reader.getColor(i,j));
                 }
@@ -52,13 +52,9 @@ public class Djikstra {
     public Boolean[][] getShortestPathTo(int x, int y){
         shortestP = new Boolean[graph.getWidth() + 2][graph.getHeight()];
         //zu Beginn alle auf false setzen
-        for (int i = 0; i < graph.getWidth() + 2 ; i++) {
+        for (int i = 1; i < graph.getWidth() + 1 ; i++) {
             for (int j = 0; j < graph.getHeight(); j++) {
-                if(i != 0 && j != graph.getWidth() + 1){
-                    shortestP[i][j] = false;
-                }else {
-                    shortestP[i][j] = true;
-                }
+                shortestP[i][j] = false;
             }
         }
 
