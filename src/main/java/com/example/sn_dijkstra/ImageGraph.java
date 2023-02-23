@@ -52,8 +52,8 @@ public class ImageGraph {
         // connect adjacent nodes with weighted edges
         for (int i = 1; i < width + 1; i++) {
             for (int j = 0; j < height; j++) {
-                for (int k = i + 1; k < i + 4; k++) {
-                    for (int l = j - 2; l < j + 3; l++) {
+                for (int k = i + 1; k < i + 3; k++) {
+                    for (int l = j - 1; l < j + 2; l++) {
                         if (l >= 0 && l < height) {
                             if (k < width + 1) {
                                 nodes[i][j].addNeighbor(nodes[k][l]);
