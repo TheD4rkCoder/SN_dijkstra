@@ -40,7 +40,7 @@ public class Djikstra {
         for (int i = 0; i < image.getWidth(); i++) {
             for (int j = 0; j < image.getHeight(); j++) {
                 if(shortestP[i + 1][j]){
-                    writer.setColor(i,j, Color.ALICEBLUE);
+                    writer.setColor(i,j, Color.BLACK);
                 }else {
                     writer.setColor(i,j, reader.getColor(i,j));
                 }
@@ -69,8 +69,9 @@ public class Djikstra {
         while(nowX != 0){
             shortestP[nowX][nowY] = true;
             //Parent holen
-            nowX = parents[nowX][nowY].getX();
+            int tempX = parents[nowX][nowY].getX();
             nowY = parents[nowX][nowY].getY();
+            nowX = tempX;
         }
         return shortestP;
     }
@@ -110,7 +111,8 @@ public class Djikstra {
 
         while(!queue.isEmpty()){
             Node u = queue.poll();      //gibt das kleinste Element aus der Queue und loescht es von dort
-            for (Node neighbor : u.getNeighbors()) {
+            for (int i = 0; i < u.getAmountOfNeighbors(); i++) {
+                Node neighbor = u.getNeighbors().get(i);
                 if(neighbor.getX() == graph.getWidth() + 1 && neighbor.getY() == 0){
                     System.out.println("last");
                 }

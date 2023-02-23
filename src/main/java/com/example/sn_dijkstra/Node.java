@@ -1,19 +1,21 @@
 package com.example.sn_dijkstra;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 class Node {
     private final int x;
     private final int y;
     private int cost;
-    private List<Node> neighbors;
+    private HashMap<Integer, Node> neighbors;
+    private int counter = 0;
 
     public Node(int x, int y, int cost) {
         this.x = x;
         this.y = y;
         this.cost = cost;
-        this.neighbors = new ArrayList<>();
+        this.neighbors = new HashMap<>();
     }
 
     public int getX() {
@@ -32,11 +34,15 @@ class Node {
         this.cost = cost;
     }
 
-    public List<Node> getNeighbors() {
+    public HashMap<Integer,Node> getNeighbors() {
         return neighbors;
     }
 
     public void addNeighbor(Node neighbor) {
-        neighbors.add(neighbor);
+        neighbors.put(counter, neighbor);
+        counter++;
+    }
+    public int getAmountOfNeighbors() {
+        return counter;
     }
 }

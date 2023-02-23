@@ -33,19 +33,25 @@ public class HelloApplication extends Application {
         //loadImage("src/main/resources/com/example/sn_dijkstra/data/IMG_1.jpg");
         loadImage("image.png");
 
-        //double[][] filter = Bildeditor.generateGaussianFilter(21, 18);
-        //wImage = Bildeditor.applyFilter(wImage, filter);
-        //wImage = Bildeditor.applyFilter(wImage, Bildeditor.gradientFilter);
-        //wImage = Bildeditor.applyGradiant(wImage, filter);
+        /*
+        double[][] filter = Bildeditor.generateGaussianFilter(21, 18);
+        wImage = Bildeditor.applyFilter(wImage, filter);
+        wImage = Bildeditor.applyFilter(wImage, Bildeditor.gradientFilter);
+        wImage = Bildeditor.applyFilter(wImage, filter);
         //wImage = Bildeditor.invertColor(wImage);
-        //wImage = Bildeditor.reduceResolution(wImage, 25);
+        wImage = Bildeditor.reduceResolution(wImage, 50);
+        System.out.println("saved");
+        saveImage(wImage);
+         */
+        System.out.println("begin building graph");
+        Long time = System.currentTimeMillis();
         ImageGraph imageGraph = new ImageGraph(wImage);
-        // saveImage(wImage);
-        showImage(stage);
+        System.out.println("graph built: " + (System.currentTimeMillis() - time));
 
         Djikstra djikstra = new Djikstra(imageGraph);
         djikstra.startDjikstra();
-        Boolean[][] shortestP = djikstra.getShortestPathTo(1, 0);
+        Boolean[][] shortestP = djikstra.getShortestPathTo((int)(wImage.getWidth() + 1), 0);
+        System.out.println("finished");
         wImage = Djikstra.applyShortestPathToImage(wImage,shortestP);
         showImage(stage);
         //saveImage(image1);

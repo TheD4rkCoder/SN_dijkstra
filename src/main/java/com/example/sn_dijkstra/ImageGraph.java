@@ -52,8 +52,8 @@ public class ImageGraph {
         // connect adjacent nodes with weighted edges
         for (int i = 1; i < width + 1; i++) {
             for (int j = 0; j < height; j++) {
-                for (int k = i + 1; k < i + 6; k++) {
-                    for (int l = j - 2; l < j + 2; j++) {
+                for (int k = i + 1; k < i + 2; k++) {
+                    for (int l = j - 0; l < j + 1; l++) {
                         if (l >= 0 && l < height) {
                             if (k < width + 1) {
                                 nodes[i][j].addNeighbor(nodes[k][l]);
@@ -69,10 +69,6 @@ public class ImageGraph {
         //fuer ersten Knoten alle folgenden als Neighbors eintragen alle
         for (int i = 0; i < height; i++) {
             nodes[0][0].addNeighbor(nodes[1][i]);
-        }
-        //fuer alle vorletzten Knoten denletzten Knoten als Neighbor anhaengen
-        for (int i = 0; i < height; i++) {
-            nodes[width][i].addNeighbor(nodes[width + 1][0]);
         }
     }
 
@@ -98,7 +94,8 @@ public class ImageGraph {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 Node node = nodes[i + 1][j];
-                for (Node neighbor : node.getNeighbors()) {
+                for (int k = 0; k < node.getAmountOfNeighbors(); k++) {
+                    Node neighbor = node.getNeighbors().get(i);
                     int x1 = node.getX();
                     int y1 = node.getY();
                     int x2 = neighbor.getX();
