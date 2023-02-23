@@ -30,23 +30,22 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
-        loadImage("src/main/resources/com/example/sn_dijkstra/data/IMG_2.png");
+        loadImage("src/main/resources/com/example/sn_dijkstra/data/IMG_5.png");
         //loadImage("image.png");
 
         ///*
         wImage = Bildeditor.convertToPolarCoordinates(image, (int)image.getWidth()/2 - 20);
-        double[][] filter = Bildeditor.generateGaussianFilter(21, 18);
+        double[][] filter = Bildeditor.generateGaussianFilter(51, 25);
         wImage = Bildeditor.applyFilter(wImage, filter);
-        wImage = Bildeditor.saturateGrayscaleImage(wImage);
         wImage = Bildeditor.applyFilter(wImage, Bildeditor.gradientFilterV);
         wImage = Bildeditor.applyFilter(wImage, filter);
         wImage = Bildeditor.saturateGrayscaleImage(wImage);
         wImage = Bildeditor.applyFilter(wImage, filter);
         //wImage = Bildeditor.invertColor(wImage);
-        wImage = Bildeditor.reduceResolution(wImage, 5);
+        //wImage = Bildeditor.reduceResolution(wImage, 5);
         wImage = Bildeditor.saturateGrayscaleImage(wImage);
-        wImage = Bildeditor.applyFilter(wImage, Bildeditor.generateGaussianFilter(9, 5));
-        wImage = Bildeditor.saturateGrayscaleImage(wImage);
+        //wImage = Bildeditor.applyFilter(wImage, Bildeditor.generateGaussianFilter(9, 5));
+        //wImage = Bildeditor.saturateGrayscaleImage(wImage);
         saveImage(wImage);
         System.out.println("saved");
         //*/

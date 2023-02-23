@@ -187,20 +187,13 @@ public class Bildeditor {
         PixelWriter writer = newImage.getPixelWriter();
         int filterHalfX = filter.length / 2;
         int filterHalfY = filter[0].length / 2;
-        double tempSumPositive, tempSumNegative;
+        double sum = getFilterSum(filter);
         double currentSum;
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 currentSum = 0;
-                tempSumPositive = 0;
-                tempSumNegative = 0;
                 for (int x = -filterHalfX; x <= filterHalfX; x++) {
                     for (int y = -filterHalfY; y <= filterHalfY; y++) {
-                        if (filter[x + filterHalfX][y + filterHalfY] > 0) {
-                            tempSumPositive += filter[x + filterHalfX][y + filterHalfY];
-                        } else {
-                            tempSumNegative += filter[x + filterHalfX][y + filterHalfY];
-                        }
                         if (x + i >= 0 && x + i < width && y + j >= 0 && y + j < height) {
                             currentSum += filter[x + filterHalfX][y + filterHalfY] * reader.getColor(x + i, y + j).getBrightness();
                         } else {
@@ -210,7 +203,7 @@ public class Bildeditor {
                     }
                 }
                 currentSum = 255 * abs(currentSum);
-                currentSum /= Math.max(tempSumPositive, abs(tempSumNegative));
+                currentSum /= sum;
                 writer.setColor(i, j, Color.rgb((int) currentSum, (int) currentSum, (int) currentSum));
             }
         }
