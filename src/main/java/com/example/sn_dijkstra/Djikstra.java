@@ -12,9 +12,7 @@ import java.util.PriorityQueue;
 
 public class Djikstra {
     private Boolean [][] shortestP;
-    private int [][]distances;
     private Node [][]parents;
-
     private ImageGraph graph;
 
     public Djikstra(ImageGraph imageGraph) {
@@ -23,10 +21,6 @@ public class Djikstra {
 
     public Boolean[][] getShortestP() {
         return shortestP;
-    }
-
-    public int[][] getDistances() {
-        return distances;
     }
 
     public Node[][] getParents() {
@@ -79,27 +73,23 @@ public class Djikstra {
         PriorityQueue<Node> queue = new PriorityQueue<Node>(new Comparator<Node>() {
             @Override
             public int compare(Node o1, Node o2) {
-                if(distances[o1.getX()][o1.getY()] < distances[o2.getX()][o2.getY()]){
+                if(o1.getCostLabel() < o2.getCostLabel()){
                     return 1;
-                }else if(distances[o1.getX()][o1.getY()] > distances[o2.getX()][o2.getY()]){
+                }else if(o1.getCostLabel() > o2.getCostLabel()){
                     return -1;
                 }
                 return 0;
             }
         });
-
-        distances = new int[graph.getWidth() + 2][graph.getHeight()];
         parents = new Node[graph.getWidth() + 2][graph.getHeight()];
 
-        distances[0][0] = 0;
+
         parents[0][0] = null;
-        distances[graph.getWidth() + 1][0] = Integer.MAX_VALUE;
         parents[graph.getWidth() + 1][0] = null;
         queue.add(nodes[0][0]);
 
         for (int i = 1; i < graph.getWidth() + 1; i++) {
             for (int j = 0; j < graph.getHeight(); j++) {
-                distances[i][j] = Integer.MAX_VALUE;
                 parents[i][j] = null;
             }
         }
@@ -108,21 +98,18 @@ public class Djikstra {
         while(!queue.isEmpty()){
             Node u = queue.poll();      //gibt das kleinste Element aus der Queue und loescht es von dort
             for (int i = 0; i < u.getAmountOfNeighbors(); i++) {
-                Node neighbor = u.getNeighbors().get(i);
-                int dist = distances[u.getX()][u.getY()] + neighbor.getCost();
+                Node neighbor = u.getNeighbor(i);
+                int dist = u.getCostLabel() + u.getEdgeToNeighborCost(i);
                 if (parents[neighbor.getX()][neighbor.getY()] == null) {
-                    distances[neighbor.getX()][neighbor.getY()] = dist;
+                    neighbor.setCostLabel(dist);
                     parents[neighbor.getX()][neighbor.getY()] = u;
                     queue.add(neighbor);
-                    continue;
-                }
-                if(queue.contains(neighbor) && distances[neighbor.getX()][neighbor.getY()] > dist){
-                    distances[neighbor.getX()][neighbor.getY()] = dist;
+                } else if(queue.contains(neighbor) && neighbor.getCostLabel() > dist){
+                    neighbor.setCostLabel(dist);
                     parents[neighbor.getX()][neighbor.getY()] = u;
                 }
             }
         }
-        System.out.println("end");
     }
 
 

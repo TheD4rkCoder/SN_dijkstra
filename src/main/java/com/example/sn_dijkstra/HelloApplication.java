@@ -17,6 +17,7 @@ import java.io.IOException;
 import javafx.embed.swing.SwingFXUtils;
 
 import javax.imageio.ImageIO;
+import javax.sound.midi.Soundbank;
 
 public class HelloApplication extends Application {
 
@@ -30,38 +31,55 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
-        loadImage("src/main/resources/com/example/sn_dijkstra/data/IMG_2.png");
+        loadImage("src/main/resources/com/example/sn_dijkstra/data/IMG_3.jpg");
         //loadImage("image.png");
-
-        ///*
+        System.out.println("begin converting image");
+        long time = System.currentTimeMillis();
         wImage = Bildeditor.convertToPolarCoordinates(image, (int)image.getWidth()/2 - 20);
-        WritableImage beginImage = wImage;
-        double[][] filter = Bildeditor.generateGaussianFilter(51, 25);
+        WritableImage beginImage = Bildeditor.reduceResolution(wImage, (int) (wImage.getWidth() / 250));
+        int filterSize = ((int) (wImage.getWidth() / 50) % 2 == 0) ? (int) (wImage.getWidth() / 50) + 1 : (int) (wImage.getWidth() / 50);
+        double[][] filter = Bildeditor.generateGaussianFilter(filterSize, wImage.getWidth()/100);
         wImage = Bildeditor.applyFilter(wImage, filter);
         wImage = Bildeditor.applyFilter(wImage, Bildeditor.gradientFilterV);
         wImage = Bildeditor.applyFilter(wImage, filter);
         wImage = Bildeditor.saturateGrayscaleImage(wImage);
         wImage = Bildeditor.applyFilter(wImage, filter);
+
         //wImage = Bildeditor.invertColor(wImage);
-        //wImage = Bildeditor.reduceResolution(wImage, 5);
+        wImage = Bildeditor.reduceResolution(wImage, (int) (wImage.getWidth() / 250));
         wImage = Bildeditor.saturateGrayscaleImage(wImage);
-        //wImage = Bildeditor.applyFilter(wImage, Bildeditor.generateGaussianFilter(9, 5));
+        wImage = Bildeditor.applyFilter(wImage, Bildeditor.generateGaussianFilter(9, 5));
+        wImage = Bildeditor.saturateGrayscaleImage(wImage);
+        System.out.println("image converted: " + (System.currentTimeMillis() - time) + "ms");
         //wImage = Bildeditor.saturateGrayscaleImage(wImage);
         saveImage(wImage);
-        System.out.println("saved");
-        //*/
         System.out.println("begin building graph");
-        Long time = System.currentTimeMillis();
+        time = System.currentTimeMillis();
         ImageGraph imageGraph = new ImageGraph(wImage);
         System.out.println("graph built: " + (System.currentTimeMillis() - time) + "ms");
 
+        System.out.println("begin djikstra algorithm");
+        time = System.currentTimeMillis();
         Djikstra djikstra = new Djikstra(imageGraph);
         djikstra.startDjikstra();
         Boolean[][] shortestP = djikstra.getShortestPathTo((int)(wImage.getWidth() + 1), 0);
-        System.out.println("finished");
-        beginImage = Djikstra.applyShortestPathToImage(beginImage,shortestP);
+        System.out.println("djikstra complete: " + (System.currentTimeMillis() - time) + "ms");
+        wImage = Djikstra.applyShortestPathToImage(beginImage,shortestP);
         //saveImage(image1);
-        showImage(stage, beginImage);
+        showImage(stage, wImage);
+        System.out.println("The read Path is the Shortest from left to right");
+        int firstcolumn = 0, lastcolumn = 0;
+        for (int i = 0; i < shortestP[0].length; i++) {
+            if (shortestP[1][i]) {
+                firstcolumn = i;
+            }
+            if (shortestP[shortestP.length-2][i]) {
+                lastcolumn = i;
+            }
+        }
+
+        System.out.println("y-difference between first and last column: " + Math.abs(firstcolumn-lastcolumn));
+        System.out.println("or " + 100.0 * Math.abs(firstcolumn-lastcolumn)/shortestP[0].length + "% of height");
     }
 
 
@@ -93,6 +111,7 @@ public class HelloApplication extends Application {
         File file = new File("image.png");
         try{
             ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+            System.out.println("image saved");
         } catch (IOException e) {
             e.printStackTrace();
         }
