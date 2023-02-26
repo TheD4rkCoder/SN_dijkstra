@@ -31,25 +31,26 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
-        loadImage("src/main/resources/com/example/sn_dijkstra/data/IMG_2.png");
+        loadImage("src/main/resources/com/example/sn_dijkstra/data/IMG_5.png");
         //loadImage("image.png");
         System.out.println("begin converting image");
         long time = System.currentTimeMillis();
         wImage = Bildeditor.convertToPolarCoordinates(image, (int)image.getWidth()/2 - 20);
-        WritableImage beginImage = Bildeditor.reduceResolution(wImage, (int) (wImage.getWidth() / 250));
+        WritableImage beginImage = Bildeditor.reduceResolution(wImage, (int) (wImage.getWidth() / 200));
+        beginImage = Bildeditor.invertColor(beginImage);
         int filterSize = ((int) (wImage.getWidth() / 50) % 2 == 0) ? (int) (wImage.getWidth() / 50) + 1 : (int) (wImage.getWidth() / 50);
         double[][] filter = Bildeditor.generateGaussianFilter(filterSize, wImage.getWidth()/100);
         wImage = Bildeditor.applyFilter(wImage, filter);
         wImage = Bildeditor.applyFilter(wImage, Bildeditor.gradientFilterV);
-        /*
+
         wImage = Bildeditor.applyFilter(wImage, filter);
         wImage = Bildeditor.saturateGrayscaleImage(wImage);
         wImage = Bildeditor.applyFilter(wImage, filter);
 
-         */
+
 
         //wImage = Bildeditor.invertColor(wImage);
-        wImage = Bildeditor.reduceResolution(wImage, (int) (wImage.getWidth() / 250));
+        wImage = Bildeditor.reduceResolution(wImage, (int) (wImage.getWidth() / 200));
         wImage = Bildeditor.saturateGrayscaleImage(wImage);
         wImage = Bildeditor.applyFilter(wImage, Bildeditor.generateGaussianFilter(9, 5));
         wImage = Bildeditor.saturateGrayscaleImage(wImage);
@@ -68,7 +69,7 @@ public class HelloApplication extends Application {
         Boolean[][] shortestP = djikstra.getShortestPathTo((int)(wImage.getWidth() + 1), 0);
         System.out.println("djikstra complete: " + (System.currentTimeMillis() - time) + "ms");
         wImage = Djikstra.applyShortestPathToImage(beginImage,shortestP);
-        wImage = Bildeditor.convertToKartesianImage(wImage, image);
+        wImage = Bildeditor.convertToKartesianImage(wImage);
         //saveImage(image1);
         showImage(stage, wImage);
         System.out.println("The read Path is the Shortest from left to right");

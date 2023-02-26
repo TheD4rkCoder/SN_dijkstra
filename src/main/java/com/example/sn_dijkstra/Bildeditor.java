@@ -82,6 +82,7 @@ public class Bildeditor {
         }
         return sum;
     }
+
     public static WritableImage convertToPolarCoordinates(Image image) {
         int width = (int) image.getWidth();
         int height = (int) image.getHeight();
@@ -116,41 +117,27 @@ public class Bildeditor {
         return polarImage;
     }
 
-    public static WritableImage convertToKartesianImage(WritableImage image, Image beginImage){
+    public static WritableImage convertToKartesianImage(Image image) {
         int width = (int) image.getWidth();
-        int height = (int) image.getHeight() * 2;
-
-        PixelReader beginReader = beginImage.getPixelReader();
+        int height = (int) (image.getHeight() * 2);
 
         WritableImage kartesianImage = new WritableImage(width, height);
         PixelReader reader = image.getPixelReader();
         PixelWriter writer = kartesianImage.getPixelWriter();
 
-        //Beginbild hineinschreiben
-        /*
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                writer.setColor(i,j,beginReader.getColor(i,j));
-            }
-        }
-
-         */
-
-
-        for (int y = 0; y < width; y++) {
-            for (int x = 0; x < height; x++) {
-                double theta = 2 * PI * x / width;
-                double r = Math.sqrt(Math.abs(Math.pow(x - width/2, 2)) + Math.abs(Math.pow(y - width/2, 2)));
-                int polarX = (int) (r * Math.cos(theta));
-                int polarY = (int) (r * Math.sin(theta));
-
-                //beschreiben, wenn die Koordinaten im ursprünglichen Bild sind
-                if (polarX >= 0 && polarX < width && polarY >= 0 && polarY < image.getHeight()) {
-                    writer.setColor(x, y, reader.getColor(polarX, polarY).invert());
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                double angle = Math.atan((double) ((height >> 1) - y) / (double) (x - (width >> 1)));
+                double r = Math.sqrt(Math.pow(x - (width >> 1), 2) + Math.pow(y - (width >> 1), 2));
+                if (x < width >> 1) {
+                    angle += PI;
+                } else if (angle < 0) {
+                    angle+= 2*PI;
                 }
-                else{
-                    writer.setColor(x, y, beginReader.getColor(x, y));
+                angle = angle*width/(2*PI);
 
+                if (angle >= 0 && angle < width &&  r >= 0 &&  r < image.getHeight()) {
+                    writer.setColor(x, height-y, reader.getColor((int)angle,(int) (r)));
                 }
             }
         }
@@ -243,7 +230,7 @@ public class Bildeditor {
         }
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                int brightness =  (int)(255 * (reader.getColor(i, j).getBrightness() - minCost) / (maxCost-minCost));
+                int brightness = (int) (255 * (reader.getColor(i, j).getBrightness() - minCost) / (maxCost - minCost));
                 writer.setColor(i, j, Color.rgb(brightness, brightness, brightness));
             }
         }
