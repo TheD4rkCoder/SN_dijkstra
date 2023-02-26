@@ -36,18 +36,18 @@ public class ImageGraph {
         PixelReader reader = image.getPixelReader();
         width = (int) image.getWidth();
         height = (int) image.getHeight();
-        nodes = new Node[width + 2][height];    //width + 2 wegen Anfangs und Endknoten
+        nodes = new Node[width + 2][height];    //width + 2 wegen Anfangs- und Endknoten
 
-        nodes[0][0] = new Node(0, 0, 0);      //Startknoten einfuegen
+        nodes[0][0] = new Node(0, 0, 0);                              //Startknoten einfuegen
         nodes[width + 1][0] = new Node(width + 1, 0, Integer.MAX_VALUE);      //Endknoten einfuegen
 
-        // create a Node for each pixel
+        // Erstellen der Nodes fuer jedes Pixel
         for (int i = 1; i < width + 1; i++) {
             for (int j = 0; j < height; j++) {
                 nodes[i][j] = new Node(i, j, Integer.MAX_VALUE);
             }
         }
-        // connect adjacent nodes with weighted edges
+        // jedem Pixel die Nachfolger anhaengen
         for (int i = 1; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 for (int k = 0; k < height; k++) {
@@ -55,7 +55,7 @@ public class ImageGraph {
                 }
             }
         }
-        //fuer erste und letzte Spalte an Knoten
+        //ersten Knoten an erste Spalte anhaengen
         for (int i = 0; i < height; i++) {
             nodes[0][0].addNeighbor(nodes[1][i], (int) (100.0 * reader.getColor(0, i).getBrightness()));
             nodes[width][i].addNeighbor(nodes[width+1][0], 0);
