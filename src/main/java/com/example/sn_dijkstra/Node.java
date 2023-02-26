@@ -8,8 +8,8 @@ class Node {
     private final int x;
     private final int y;
     private int costLabel;
-    private HashMap<Integer, Node> neighbors;
-    private HashMap<Integer, Integer> costToNeighbors;
+    private final HashMap<Integer, Node> neighbors;
+    private final HashMap<Integer, Integer> costToNeighbors;
     private int counter = 0;
 
     public Node(int x, int y, int costLabel) {
@@ -42,14 +42,15 @@ class Node {
     public int getEdgeToNeighborCost(int x) {
         return costToNeighbors.get(x);
     }
-
+    public int getAmountOfNeighbors() {
+        return counter;
+    }
 
     public void addNeighbor(Node neighbor, int edgeCost) {
         neighbors.put(counter, neighbor);
         costToNeighbors.put(counter, edgeCost);
         counter++;
     }
-    public int getAmountOfNeighbors() {
-        return counter;
-    }
+
 }
+

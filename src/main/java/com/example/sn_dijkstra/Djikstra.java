@@ -100,6 +100,7 @@ public class Djikstra {
             for (int i = 0; i < u.getAmountOfNeighbors(); i++) {
                 Node neighbor = u.getNeighbor(i);
                 int dist = u.getCostLabel() + u.getEdgeToNeighborCost(i);
+
                 if (parents[neighbor.getX()][neighbor.getY()] == null) {
                     neighbor.setCostLabel(dist);
                     parents[neighbor.getX()][neighbor.getY()] = u;

@@ -31,7 +31,7 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
-        loadImage("src/main/resources/com/example/sn_dijkstra/data/IMG_3.jpg");
+        loadImage("src/main/resources/com/example/sn_dijkstra/data/IMG_2.png");
         //loadImage("image.png");
         System.out.println("begin converting image");
         long time = System.currentTimeMillis();
@@ -41,9 +41,12 @@ public class HelloApplication extends Application {
         double[][] filter = Bildeditor.generateGaussianFilter(filterSize, wImage.getWidth()/100);
         wImage = Bildeditor.applyFilter(wImage, filter);
         wImage = Bildeditor.applyFilter(wImage, Bildeditor.gradientFilterV);
+        /*
         wImage = Bildeditor.applyFilter(wImage, filter);
         wImage = Bildeditor.saturateGrayscaleImage(wImage);
         wImage = Bildeditor.applyFilter(wImage, filter);
+
+         */
 
         //wImage = Bildeditor.invertColor(wImage);
         wImage = Bildeditor.reduceResolution(wImage, (int) (wImage.getWidth() / 250));
@@ -65,6 +68,7 @@ public class HelloApplication extends Application {
         Boolean[][] shortestP = djikstra.getShortestPathTo((int)(wImage.getWidth() + 1), 0);
         System.out.println("djikstra complete: " + (System.currentTimeMillis() - time) + "ms");
         wImage = Djikstra.applyShortestPathToImage(beginImage,shortestP);
+        wImage = Bildeditor.convertToKartesianImage(wImage, image);
         //saveImage(image1);
         showImage(stage, wImage);
         System.out.println("The read Path is the Shortest from left to right");
