@@ -37,7 +37,7 @@ public class HelloApplication extends Application {
         long time = System.currentTimeMillis();
         wImage = Bildeditor.convertToPolarCoordinates(image, (int)image.getWidth()/2 - 20);
         WritableImage beginImage = Bildeditor.reduceResolution(wImage, (int) (wImage.getWidth() / 200));
-        beginImage = Bildeditor.invertColor(beginImage);
+        wImage = Bildeditor.invertColor(wImage);
         int filterSize = ((int) (wImage.getWidth() / 50) % 2 == 0) ? (int) (wImage.getWidth() / 50) + 1 : (int) (wImage.getWidth() / 50);
         double[][] filter = Bildeditor.generateGaussianFilter(filterSize, wImage.getWidth()/100);
         wImage = Bildeditor.applyFilter(wImage, filter);

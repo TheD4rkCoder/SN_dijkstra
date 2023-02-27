@@ -110,7 +110,7 @@ public class Bildeditor {
 
                 //beschreiben, wenn die Koordinaten im ursprünglichen Bild sind
                 if (polarX >= 0 && polarX < width && polarY >= 0 && polarY < height) {
-                    writer.setColor(x, y, reader.getColor(polarX, polarY).invert());
+                    writer.setColor(x, y, reader.getColor(polarX, polarY));
                 }
             }
         }
