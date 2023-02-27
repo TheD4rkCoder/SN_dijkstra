@@ -15,6 +15,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import javafx.embed.swing.SwingFXUtils;
+import javafx.stage.Window;
 
 import javax.imageio.ImageIO;
 import javax.sound.midi.Soundbank;

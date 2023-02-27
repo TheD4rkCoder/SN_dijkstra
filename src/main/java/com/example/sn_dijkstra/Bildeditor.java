@@ -90,9 +90,9 @@ public class Bildeditor {
     }
 
     public static WritableImage convertToPolarCoordinates(Image image, int radius) {
-        //Deklaration gebrauchter Variablen
-        int width = (int) image.getWidth();
-        int height = (int) image.getHeight();
+        //Deklaration gebrauchter Konstanten
+        final int width = (int) image.getWidth();
+        final int height = (int) image.getHeight();
 
         //Resultat-Bild
         WritableImage polarImage = new WritableImage(width, radius);
@@ -141,29 +141,9 @@ public class Bildeditor {
                 }
             }
         }
-
-
-        /*
-        //Polarbild richtig drueberschreiben
-        for (int x = 0; x < image.getWidth(); x++) {
-            for (int y = 0; y < image.getHeight(); y++) {
-                double theta = 2 * PI * x / width;
-                double r = y;
-                int polarX = (int) (r * Math.cos(theta) + width / 2);
-                int polarY = (int) (r * Math.sin(theta) + height / 2);
-                if (polarX >= 0 && polarX < width && polarY >= 0 && polarY < height) {
-                    writer.setColor(polarX, polarY, reader.getColor(x, y).invert());
-                }
-            }
-        }
-
-         */
-
-
         return kartesianImage;
 
     }
-
 
     public static WritableImage invertColor(Image image) {
 
@@ -238,29 +218,44 @@ public class Bildeditor {
     }
 
     public static WritableImage applyFilter(Image image, double[][] filter) {
-        int width = (int) image.getWidth();
-        int height = (int) image.getHeight();
+        // Deklaration gebrauchter Konstanten
+        final int width = (int) image.getWidth();
+        final int height = (int) image.getHeight();
+        final int filterHalfX = filter.length / 2;
+        final int filterHalfY = filter[0].length / 2;
+        final double sum = getFilterSum(filter);
+        // Deklaration gebrauchter Variablen
+        double currentSum;
+        // Resultat-Bild
         WritableImage newImage = new WritableImage(width, height);
+        // für das lesen der Pixelwerte aus dem Ausgangsbild und dem Beschreiben des Resultat-Bilds
         PixelReader reader = image.getPixelReader();
         PixelWriter writer = newImage.getPixelWriter();
-        int filterHalfX = filter.length / 2;
-        int filterHalfY = filter[0].length / 2;
-        double sum = getFilterSum(filter);
-        double currentSum;
+
+        // Iteration über alle Pixel des Ausgangsbildes:
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
+                // rücksetzen der Summe der Produkte vom Filter und Pixelwert
                 currentSum = 0;
+                // Iteration über alle Pixel rundherum um den aktuellen Pixel [i][j] anhand der größe des Filters
                 for (int x = -filterHalfX; x <= filterHalfX; x++) {
                     for (int y = -filterHalfY; y <= filterHalfY; y++) {
                         if (x + i >= 0 && x + i < width && y + j >= 0 && y + j < height) {
+                            // falls sich das aktuell angesehene Pixel innerhalb des Bildes befindet,
+                            // wird zur Farbsumme das Produkt aus dem Pixel-Helligkeitswert und dem Filter-Wert an dieser Stelle addiert
                             currentSum += filter[x + filterHalfX][y + filterHalfY] * reader.getColor(x + i, y + j).getBrightness();
                         } else {
-                            currentSum += filter[x + filterHalfX][y + filterHalfY] * reader.getColor((x + i < 0) ? 0 : (x + i < width) ? x + i : width - 1, (y + j < 0) ? 0 : (y + j < height) ? y + j : height - 1).getBrightness();
+                            // falls sich das aktuell angesehene Pixel nicht innerhalb des Bildes befindet,
+                            // wird die Farbe des am naheliegendsten Pixels für das Produkt verwendet und zur Farbsumme addiert
+                            currentSum += filter[x + filterHalfX][y + filterHalfY] * reader.getColor((x + i < 0) ? 0 : (x + i < width) ?
+                                    x + i : width - 1, (y + j < 0) ? 0 : (y + j < height) ? y + j : height - 1).getBrightness();
                         }
                     }
                 }
+                // Die Farbsumme wird mit 255 / (Summe des Filters) multipliziert um einen Farbwert zwischen 0 und 255 zu bekommen
                 currentSum = 255 * abs(currentSum);
                 currentSum /= sum;
+                // das Aktuell angesehene Pixel wird mit der Summe als Graustufenwert beschrieben
                 writer.setColor(i, j, Color.rgb((int) currentSum, (int) currentSum, (int) currentSum));
             }
         }
