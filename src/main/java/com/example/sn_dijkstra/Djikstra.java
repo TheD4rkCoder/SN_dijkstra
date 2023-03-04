@@ -7,13 +7,14 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
 public class Djikstra {
     private Boolean [][] shortestP;
     private Node [][]parents;
-    private ImageGraph graph;
+    private final ImageGraph graph;
 
     public Djikstra(ImageGraph imageGraph) {
         this.graph = imageGraph;
@@ -66,45 +67,63 @@ public class Djikstra {
         return shortestP;
     }
 
-    public void startDjikstra(){
-        Node[][] nodes = graph.nodes;
 
-        int nodeAmount = graph.getWidth() * graph.getHeight() + 2;  // +2 wegen ein Knoten zu Beginn und einen am Ende
-        PriorityQueue<Node> queue = new PriorityQueue<Node>(new Comparator<Node>() {
-            @Override
-            public int compare(Node o1, Node o2) {
-                if(o1.getCostLabel() < o2.getCostLabel()){
-                    return 1;
-                }else if(o1.getCostLabel() > o2.getCostLabel()){
-                    return -1;
-                }
-                return 0;
+
+
+    PriorityQueue<Node> queue = new PriorityQueue<Node>(new Comparator<Node>() {
+        @Override
+        public int compare(Node o1, Node o2) {  //aktuell den kleinsten Node am Anfang
+            if(o1.getCostLabel() > o2.getCostLabel()){
+                return 1;
+            }else if(o1.getCostLabel() < o2.getCostLabel()){
+                return -1;
             }
-        });
+            return 0;
+        }
+    });
+
+
+
+    public void startDjikstra(){
+        //parents-Arrays initialisieren
         parents = new Node[graph.getWidth() + 2][graph.getHeight()];
-
-
         parents[0][0] = null;
         parents[graph.getWidth() + 1][0] = null;
-        queue.add(nodes[0][0]);
-
         for (int i = 1; i < graph.getWidth() + 1; i++) {
             for (int j = 0; j < graph.getHeight(); j++) {
                 parents[i][j] = null;
             }
         }
 
+        queue.add(graph.nodes[0][0]);
 
+        //queue durchgehen, bis sie leer ist
         while(!queue.isEmpty()){
-            Node u = queue.poll();      //gibt das kleinste Element aus der Queue und loescht es von dort
+            /*
+            for (Node d:queue
+                 ) {
+                System.out.println(d.getCostLabel());
+            }
+
+             */
+            Node u = queue.poll();   //gibt das kleinste Element aus der queue und loescht es von dort
+
+            //alle Nachfolger des aktuellen Knotens u durchgehen
             for (int i = 0; i < u.getAmountOfNeighbors(); i++) {
                 Node neighbor = u.getNeighbor(i);
-                int dist = u.getCostLabel() + u.getEdgeToNeighborCost(i);
 
+                //dist = Kosten zu Nachfolger
+                long dist = u.getCostLabel() + u.getEdgeToNeighborCost(i);
+
+                //wenn Nachfolger keinen Parent hat, wird er in die queue gegeben
                 if (parents[neighbor.getX()][neighbor.getY()] == null) {
+                    //Aktualisieren der Kosten und Hinzufuegen von u als Parent
                     neighbor.setCostLabel(dist);
                     parents[neighbor.getX()][neighbor.getY()] = u;
                     queue.add(neighbor);
+
+                    //wenn Nachfolger bereits in queue und dist kleiner als die aktuell eingetragenen Kosten
+                    //werden die Kosten und das parent-Array aktualisiert
                 } else if(queue.contains(neighbor) && neighbor.getCostLabel() > dist){
                     neighbor.setCostLabel(dist);
                     parents[neighbor.getX()][neighbor.getY()] = u;

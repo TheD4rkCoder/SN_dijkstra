@@ -15,14 +15,8 @@ import java.io.IOException;
 
 public class ImageGraph {
     public Node[][] nodes;
-    private int width;
-    private int height;
-
-
-    public Node[][] getNodes() {
-        return nodes;
-    }
-
+    private final int width;
+    private final int height;
     public int getWidth() {
         return width;
     }
@@ -32,7 +26,6 @@ public class ImageGraph {
     }
 
     public ImageGraph(Image image) {
-
         PixelReader reader = image.getPixelReader();
         width = (int) image.getWidth();
         height = (int) image.getHeight();
@@ -47,11 +40,16 @@ public class ImageGraph {
                 nodes[i][j] = new Node(i, j, Integer.MAX_VALUE);
             }
         }
+
         // jedem Pixel die Nachfolger anhaengen
         for (int i = 1; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 for (int k = 0; k < height; k++) {
-                    nodes[i][j].addNeighbor(nodes[i + 1][k], (int) (100.0 *(0.5 + reader.getColor(i, k).getBrightness()) * 100 - Math.pow(2, Math.abs(j - k))));
+                    //nodes[i][j].addNeighbor(nodes[i + 1][k], (int) (100.0 *(0.5 + reader.getColor(i, k).getBrightness()) * 100 - Math.pow(2, Math.abs(j - k))));
+
+                    //Theoretisch richtig, funktioniert aber nicht
+                    nodes[i][j].addNeighbor(nodes[i + 1][k], (long) ((reader.getColor(i, k).getBrightness() * 100) + ((Math.abs(j - k) < 31) ? Math.pow(2, Math.abs(j - k)) : Integer.MAX_VALUE)));
+                    //+1 damit nicht random ein punkt ganz oben 0 ist und dort hingehüft ist.
                 }
             }
         }

@@ -132,9 +132,9 @@ public class Bildeditor {
                 if (x < width >> 1) {
                     angle += PI;
                 } else if (angle < 0) {
-                    angle+= 2*PI;
+                    angle += 2 * PI;
                 }
-                angle = angle*width/(2*PI);
+                angle = angle * width/(2 * PI);
 
                 if (angle >= 0 && angle < width &&  r >= 0 &&  r < image.getHeight()) {
                     writer.setColor(x, height-y, reader.getColor((int)angle,(int) (r)));
