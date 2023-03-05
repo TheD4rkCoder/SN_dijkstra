@@ -41,19 +41,17 @@ public class ImageGraph {
             }
         }
 
-        // jedem Pixel die Nachfolger anhaengen
+        // jedem Pixel die Nachfolger anhängen
         for (int i = 1; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 for (int k = 0; k < height; k++) {
-                    //nodes[i][j].addNeighbor(nodes[i + 1][k], (int) (100.0 *(0.5 + reader.getColor(i, k).getBrightness()) * 100 - Math.pow(2, Math.abs(j - k))));
-
-                    //Theoretisch richtig, funktioniert aber nicht
-                    nodes[i][j].addNeighbor(nodes[i + 1][k], (long) ((reader.getColor(i, k).getBrightness() * 100) + ((Math.abs(j - k) < 31) ? Math.pow(2, Math.abs(j - k)) : Integer.MAX_VALUE)));
-                    //+1 damit nicht random ein punkt ganz oben 0 ist und dort hingehüft ist.
+                    nodes[i][j].addNeighbor(nodes[i + 1][k], (long) (10000.0 *
+                            (reader.getColor(i, k).getBrightness() + 0.5) *
+                            Math.pow(1.1, Math.abs(j - k))));
                 }
             }
         }
-        //ersten Knoten an erste Spalte anhaengen
+        //ersten Knoten an erste Spalte anhängen
         for (int i = 0; i < height; i++) {
             nodes[0][0].addNeighbor(nodes[1][i], (int) (100.0 * reader.getColor(0, i).getBrightness()));
             nodes[width][i].addNeighbor(nodes[width+1][0], 0);

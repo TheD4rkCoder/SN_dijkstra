@@ -7,16 +7,26 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
-public class Djikstra {
+public class Dijkstra {
     private Boolean [][] shortestP;
     private Node [][]parents;
     private final ImageGraph graph;
+    PriorityQueue<Node> queue = new PriorityQueue<Node>(new Comparator<Node>() {
+        @Override
+        public int compare(Node o1, Node o2) {  //aktuell den kleinsten Node am Anfang
+            if(o1.getCostLabel() > o2.getCostLabel()){
+                return 1;
+            }else if(o1.getCostLabel() < o2.getCostLabel()){
+                return -1;
+            }
+            return 0;
+        }
+    });
 
-    public Djikstra(ImageGraph imageGraph) {
+    public Dijkstra(ImageGraph imageGraph) {
         this.graph = imageGraph;
     }
 
@@ -67,24 +77,7 @@ public class Djikstra {
         return shortestP;
     }
 
-
-
-
-    PriorityQueue<Node> queue = new PriorityQueue<Node>(new Comparator<Node>() {
-        @Override
-        public int compare(Node o1, Node o2) {  //aktuell den kleinsten Node am Anfang
-            if(o1.getCostLabel() > o2.getCostLabel()){
-                return 1;
-            }else if(o1.getCostLabel() < o2.getCostLabel()){
-                return -1;
-            }
-            return 0;
-        }
-    });
-
-
-
-    public void startDjikstra(){
+    public void startDijkstra(){
         //parents-Arrays initialisieren
         parents = new Node[graph.getWidth() + 2][graph.getHeight()];
         parents[0][0] = null;
@@ -94,18 +87,10 @@ public class Djikstra {
                 parents[i][j] = null;
             }
         }
-
         queue.add(graph.nodes[0][0]);
 
         //queue durchgehen, bis sie leer ist
         while(!queue.isEmpty()){
-            /*
-            for (Node d:queue
-                 ) {
-                System.out.println(d.getCostLabel());
-            }
-
-             */
             Node u = queue.poll();   //gibt das kleinste Element aus der queue und loescht es von dort
 
             //alle Nachfolger des aktuellen Knotens u durchgehen

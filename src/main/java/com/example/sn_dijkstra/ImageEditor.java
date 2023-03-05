@@ -9,7 +9,7 @@ import javafx.scene.paint.Color;
 import static java.lang.Math.*;
 
 
-public class Bildeditor {
+public class ImageEditor {
     static double[][] gradientFilterV = {{-1, -2, -4, -6, -4, -2, -1, 0, 1, 2, 4, 5, 4, 2, 1}};
     static double[][] gradientFilterH = {{-1}, {-2}, {-1}, {0}, {1}, {2}, {1}};
     double[][] horizontalFilter = {{-1}, {0}, {1}};
@@ -42,20 +42,6 @@ public class Bildeditor {
         }
         return filter;
     }
-
-//  double value = Math.exp(exponent) / (2 * Math.PI * sigma * sigma);
-            /* gehört noch in generate gauss braucht es anscheinend nicht
-        // Normalize the filter
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                filter[i][j] /= sum;
-                System.out.print(filter[i][j] + "     ");
-            }
-            System.out.println();
-        }
-
-         */
-
 
     public static double getFilterSum(double[][] filter) {
         double sum = 0;
@@ -157,13 +143,13 @@ public class Bildeditor {
         double averageColor;
         int divisor;
 
-        // jeden Pixel des neuen Bildes durchgehen
+        // jedes Pixel des neuen Bildes durchgehen
         for (int i = 0; i < newWidth; i++) {
             for (int j = 0; j < newHeight; j++) {
                 averageColor = 0.0;
                 divisor = 0;
 
-                // den Mittelwert der Farbwerte fuer den Pixel berechnen
+                // den Mittelwert der Farbwerte für das Pixel berechnen
                 for (int k = 0; k < pixelsToMerge; k++) {
                     for (int l = 0; l < pixelsToMerge; l++) {
                         if (i * pixelsToMerge + k < width && j * pixelsToMerge + l < height) {
@@ -214,7 +200,7 @@ public class Bildeditor {
         double currentSum;
         // Resultat-Bild
         WritableImage newImage = new WritableImage(width, height);
-        // für das lesen der Pixelwerte aus dem Ausgangsbild und dem Beschreiben des Resultat-Bilds
+        // für das Lesen der Pixelwerte aus dem Ausgangsbild und dem Beschreiben des Resultat-Bilds
         PixelReader reader = image.getPixelReader();
         PixelWriter writer = newImage.getPixelWriter();
 
@@ -223,7 +209,7 @@ public class Bildeditor {
             for (int j = 0; j < height; j++) {
                 // rücksetzen der Summe der Produkte vom Filter und Pixelwert
                 currentSum = 0;
-                // Iteration über alle Pixel rundherum um den aktuellen Pixel [i][j] anhand der größe des Filters
+                // Iteration über alle Pixel rundherum um das aktuelle Pixel [i][j] anhand der größe des Filters
                 for (int x = -filterHalfX; x <= filterHalfX; x++) {
                     for (int y = -filterHalfY; y <= filterHalfY; y++) {
                         if (x + i >= 0 && x + i < width && y + j >= 0 && y + j < height) {

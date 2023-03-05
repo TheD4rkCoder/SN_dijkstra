@@ -24,19 +24,15 @@ class Node {
     public int getX() {
         return x;
     }
-
     public int getY() {
         return y;
     }
-
     public long getCostLabel() {
         return costLabel;
     }
-
     public void setCostLabel(long costLabel) {
         this.costLabel = costLabel;
     }
-
     public Node getNeighbor(int x) {
         return neighbors.get(x);
     }
@@ -46,7 +42,6 @@ class Node {
     public int getAmountOfNeighbors() {
         return counter;
     }
-
     public void addNeighbor(Node neighbor, long edgeCost) {
         neighbors.put(counter, neighbor);
         costToNeighbors.put(counter, edgeCost);
