@@ -10,8 +10,11 @@ import static java.lang.Math.*;
 
 
 public class Bildeditor {
-
-    static double[][] filter = {
+    static double[][] gradientFilterV = {{-1, -2, -4, -6, -4, -2, -1, 0, 1, 2, 4, 5, 4, 2, 1}};
+    static double[][] gradientFilterH = {{-1}, {-2}, {-1}, {0}, {1}, {2}, {1}};
+    double[][] horizontalFilter = {{-1}, {0}, {1}};
+    double[][] verticalFilter = {{-1, 0, 1}};
+    double[][] twoDimensionFilter = {
             {0, -1, -2, -6, -9, -6, -2, -1, 0},
             {-1, -6, -10, -13, -21, -13, -10, -6, 1},
             {-2, -10, -15, -16, -7, -16, -15, 10, 2},
@@ -22,23 +25,6 @@ public class Bildeditor {
             {-1, 6, 10, 13, 21, 13, 10, 6, 1},
             {0, 1, 2, 6, 9, 6, 2, 1, 0},
     };
-
-    static int[][] absFilter = {
-            {0, 1, 2, 6, 9, 6, 2, 1, 0},
-            {1, 6, 10, 13, 21, 13, 10, 6, 1},
-            {2, 10, 15, 16, 23, 16, 15, 10, 2},
-            {6, 13, 16, 22, 27, 22, 16, 13, 6},
-            {9, 21, 23, 27, 30, 27, 23, 21, 9},
-            {6, 13, 16, 22, 27, 22, 16, 13, 6},
-            {2, 10, 15, 16, 23, 16, 15, 10, 2},
-            {1, 6, 10, 13, 21, 13, 10, 6, 1},
-            {0, 1, 2, 6, 9, 6, 2, 1, 0},
-    };
-
-    static double[][] gradientFilterV = {{-1, -2, -4, -6, -4, -2, -1, 0, 1, 2, 4, 5, 4, 2, 1}};
-    static double[][] gradientFilterH = {{-1}, {-2}, {-1}, {0}, {1}, {2}, {1}};
-    static double[][] testFilter = {{-1, 0, 1}};
-
 
     public static double[][] generateGaussianFilter(int size, double sigma) {
         double[][] filter = new double[size][size];
